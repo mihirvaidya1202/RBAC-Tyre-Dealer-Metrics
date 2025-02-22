@@ -1,0 +1,21 @@
+{
+    "name": "rbac-frontend",
+    "version": "1.0.0",
+    "description": "RBAC frontend with Svelte",
+    "type": "module",
+    "scripts": {
+      "dev": "vite",
+      "build": "vite build",
+      "preview": "vite preview"
+    },
+    "dependencies": {
+      "svelte": "^4.2.19",
+      "svelte-routing": "^1.6.0"
+    },
+    "devDependencies": {
+      "@sveltejs/vite-plugin-svelte": "^2.4.2",
+      "sass": "^1.62.1",
+      "svelte-preprocess": "^5.0.4",
+      "vite": "^4.3.9"
+    }
+  }
