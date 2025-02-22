@@ -15,12 +15,14 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
+
   try {
     const user = await User.findOne({ username });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(400).send({ error: 'Invalid credentials' });
     }
     const token = generateToken(user);
+
     res.send({ token, role: user.role });
   } catch (err) {
     res.status(400).send({ error: 'Login failed' });
