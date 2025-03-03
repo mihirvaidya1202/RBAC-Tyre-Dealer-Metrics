@@ -1,0 +1,63 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+    margin-bottom: 1.6rem;
+    font-size: 1.6rem;
+
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 1.6rem;
+
+        input {
+            padding: 0.8rem;
+            font-size: 1.6rem;
+        }
+    }
+
+    button {
+        width: fit-content;
+        align-self: center;
+        font-size: 1.6rem;
+        padding: 0.8rem 1.6rem;
+        background-color: #27509b;
+        color: white;
+        border: none;
+        border-radius: 0.8rem;
+        cursor: pointer;
+
+
+        &:hover {
+            background-color: #0056b3;
+        }
+    }
+}
+
+table {
+    font-size: 1.6rem;
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+        padding: 0.8rem;
+        border: 0.1rem solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f4f4f4;
+    }
+
+    button {
+        padding: 0.8rem 1.6rem;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #c82333;
+        }
+    }
+}

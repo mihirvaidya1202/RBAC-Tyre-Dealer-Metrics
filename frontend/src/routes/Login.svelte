@@ -11,7 +11,7 @@
       const data = await authApi.login(username, password);
       localStorage.setItem('token', data.token);
       if (data.role === 'admin') {
-        navigate('/admin');
+        navigate('/admin/landing');
       } else if (data.role === 'customer') {
         navigate('/customer');
       } else if (data.role === 'dealer') {

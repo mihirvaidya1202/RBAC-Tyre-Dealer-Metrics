@@ -1,0 +1,21 @@
+html {
+    font-size: 62.5%;
+
+    body {
+        padding: 3.2rem 6.4rem;
+        margin: unset;
+
+        .page-title {
+            font-size: 4.8rem;
+        }
+
+        .area-title {
+            font-size: 3.2rem;
+        }
+
+        .page-title, .area-title {
+            text-align: center;
+            color: #27509b;
+        }
+    }
+}
