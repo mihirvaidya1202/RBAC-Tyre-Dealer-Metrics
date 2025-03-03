@@ -2,7 +2,7 @@ html {
     font-size: 62.5%;
 
     body {
-        padding: 3.2rem 6.4rem;
+        padding: 1.6rem 0.8rem;
         margin: unset;
 
         .page-title {
@@ -16,6 +16,10 @@ html {
         .page-title, .area-title {
             text-align: center;
             color: #27509b;
+        }
+
+        @media only screen and (min-width: 600px) {
+            padding: 3.2rem 6.4rem;
         }
     }
 }

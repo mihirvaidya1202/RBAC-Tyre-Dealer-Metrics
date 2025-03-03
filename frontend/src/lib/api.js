@@ -9,14 +9,21 @@ const request = async (url, method, body = null, token = null) => {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
+  console.log('Request URL:', `${API_BASE_URL}${url}`);
+  console.log('Request Method:', method);
+  console.log('Request Body:', body);
+
   const response = await fetch(`${API_BASE_URL}${url}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : null,
   });
 
+  console.log('Response:', response);
+
   if (!response.ok) {
     const error = await response.json();
+    console.log('Error Response:', error);
     throw new Error(error.message || 'Something went wrong');
   }
 
@@ -30,8 +37,8 @@ export const authApi = {
     return request('/auth/login', 'POST', { username, password });
   },
 
-  register: async (username, password, role) => {
-    return request('/auth/register', 'POST', { username, password, role });
+  register: async (email, username, password, role) => {
+    return request('/auth/register', 'POST', { email, username, password, role });
   },
 };
 
@@ -54,6 +61,21 @@ export const tyreStockApi = {
 
   updateTyreStock: async (id, quantity) => {
     return request(`/tyre-stocks/${id}`, 'PUT', { quantity });
+  },
+
+  buyTyreStock: async (id, quantity) => {
+    const response = await fetch(`${API_BASE_URL}/tyre-stocks/${id}/buy`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quantity }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to buy tyre stock');
+    }
+
+    return await response.json();
   },
 
   deleteTyreStock: async (id) => {

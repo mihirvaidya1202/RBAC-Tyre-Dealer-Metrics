@@ -15,7 +15,7 @@
       } else if (data.role === 'customer') {
         navigate('/customer');
       } else if (data.role === 'dealer') {
-        navigate('/dealer');
+        navigate('/dealer/landing');
       }
     } catch (err) {
       error = err.message;
