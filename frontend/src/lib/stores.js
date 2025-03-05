@@ -1,46 +1,53 @@
 import { writable } from 'svelte/store';
 import { tyreStockApi } from './api';
 
-// Store for all tyre stocks
 export const tyreStocks = writable([]);
 
-// Store for dealer's purchased stock
 export const dealerStockStore = writable([]);
 
-// Function to load tyre stocks
-export async function loadTyreStocks() {
-  const stocks = await tyreStockApi.fetchTyreStocks();
-  tyreStocks.set(stocks);
+export async function loadTyreStocks(token) {
+    try {
+      const stocks = await tyreStockApi.fetchTyreStocks(token);
+      tyreStocks.set(stocks);
+    } catch (error) {
+      console.error('Error loading tyre stocks:', error.message);
+      throw new Error('Failed to load tyre stocks. Please try again later.');
+    }
 }
 
-// Function to add purchased stock to the dealer's stock
-export function addToDealerStock(stock) {
-  dealerStockStore.update((stocks) => {
-    const existingStock = stocks.find((s) => s._id === stock._id);
-    console.log("EXISTING STOCK>>>>>>", existingStock)
+export async function addToDealerStock(stock, quantity, token) {  
+  try {
+      await tyreStockApi.addToDealerStock(stock._id, quantity, token);
 
-    if (existingStock) {
-      // Update quantity if the stock already exists
-      existingStock.quantity += stock.quantity;
-      return stocks;
-    } else {
-      // Add new stock to the dealer's stock
-      return [...stocks, stock];
-    }
+      const updatedDealerStock = await tyreStockApi.getDealerStock(token);
+      dealerStockStore.set(updatedDealerStock);
+
+      const updatedAdminStock = await tyreStockApi.fetchTyreStocks(token);
+      tyreStocks.set(updatedAdminStock);
+
+      saveDealerStockToLocalStorage();
+
+  } catch (error) {
+      console.error("🚨 Error adding stock to dealer:", error);
+      throw new Error("Failed to add stock.");
+  }
+}
+
+export function removeFromDealerStock(id) {
+  dealerStockStore.update((stocks) => {
+    const updatedStocks = stocks.filter((stock) => stock._id !== id);
+    return updatedStocks;
   });
 
-  // Save the dealer's stock to localStorage for persistence
   saveDealerStockToLocalStorage();
 }
 
-// Function to save dealer's stock to localStorage
 function saveDealerStockToLocalStorage() {
   dealerStockStore.subscribe((stocks) => {
     localStorage.setItem('dealerStock', JSON.stringify(stocks));
   });
 }
 
-// Function to load dealer's stock from localStorage
 export function loadDealerStockFromLocalStorage() {
   const dealerStock = localStorage.getItem('dealerStock');
   if (dealerStock) {

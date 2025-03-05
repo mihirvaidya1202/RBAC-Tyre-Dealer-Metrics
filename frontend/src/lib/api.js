@@ -9,77 +9,48 @@ const request = async (url, method, body = null, token = null) => {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  console.log('Request URL:', `${API_BASE_URL}${url}`);
-  console.log('Request Method:', method);
-  console.log('Request Body:', body);
-
-  const response = await fetch(`${API_BASE_URL}${url}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : null,
-  });
-
-  console.log('Response:', response);
-
-  if (!response.ok) {
-    const error = await response.json();
-    console.log('Error Response:', error);
-    throw new Error(error.message || 'Something went wrong');
-  }
-
-  const text = await response.text();
-  return text ? JSON.parse(text) : null;
-};
-
-// Auth API
-export const authApi = {
-  login: async (username, password) => {
-    return request('/auth/login', 'POST', { username, password });
-  },
-
-  register: async (email, username, password, role) => {
-    return request('/auth/register', 'POST', { email, username, password, role });
-  },
-};
-
-// User API
-export const userApi = {
-  getAllUsers: async (token) => {
-    return request('/users', 'GET', null, token);
-  },
-};
-
-// Tyre Stock API
-export const tyreStockApi = {
-  fetchTyreStocks: async () => {
-    return request('/tyre-stocks', 'GET');
-  },
-
-  addTyreStock: async (stock) => {
-    return request('/tyre-stocks', 'POST', stock);
-  },
-
-  updateTyreStock: async (id, quantity) => {
-    return request(`/tyre-stocks/${id}`, 'PUT', { quantity });
-  },
-
-  buyTyreStock: async (id, quantity) => {
-    const response = await fetch(`${API_BASE_URL}/tyre-stocks/${id}/buy`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ quantity }),
+  try {
+    const response = await fetch(`${API_BASE_URL}${url}`, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : null,
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to buy tyre stock');
+    let responseData;
+    const contentType = response.headers.get("Content-Type");
+
+    if (contentType && contentType.includes("application/json")) {
+      responseData = await response.json();
+    } else {
+      console.warn('⚠️ Non-JSON response received.');
+      responseData = null;
     }
 
-    return await response.json();
-  },
+    if (!response.ok) {
+      console.error('🚨 API Request Error:', responseData?.message || response.statusText);
+      throw new Error(responseData?.message || `❌ Error ${response.status}: ${response.statusText}`);
+    }
 
-  deleteTyreStock: async (id) => {
-    const response = await request(`/tyre-stocks/${id}`, 'DELETE');
-    return response;
-  },
+    return responseData;
+  } catch (error) {
+    console.error('🚨 API Fetch Error:', error.message);
+    throw new Error(error.message || 'Failed to fetch data');
+  }
+};
+
+export const authApi = {
+  login: async (credentials) => request('/auth/login', 'POST', credentials),
+  register: async (userData) => request('/auth/register', 'POST', userData),
+  refreshToken: async (refreshToken) => request('/auth/refresh-token', 'POST', { refreshToken }),
+  logout: async (token) => request('/auth/logout', 'POST', null, token),
+};
+
+export const tyreStockApi = {
+  fetchTyreStocks: async (token) => request('/tyre-stocks', 'GET', null, token),
+  addTyreStock: async (stock, token) => request('/tyre-stocks', 'POST', stock, token),
+  buyTyreStock: async (id, quantity, token) => request(`/tyre-stocks/buy/${id}`, 'POST', { quantity }, token),
+  deleteTyreStock: async (id, token) => request(`/tyre-stocks/${id}`, 'DELETE', null, token),
+  removeFromDealerStock: async (id, token) => request(`/dealer-stock/${id}`, 'DELETE', null, token),
+  getDealerStock: async (token) => request('/dealer/stock', 'GET', null, token),
+  addToDealerStock: async (stockId, quantity, token) => request('/dealer/stock/add', 'POST', { stockId, quantity }, token),
 };

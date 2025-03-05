@@ -17,16 +17,9 @@ form {
     }
 
     button {
-        width: fit-content;
         align-self: center;
-        font-size: 1.6rem;
-        padding: 0.8rem 1.6rem;
         background-color: #27509b;
         color: white;
-        border: none;
-        border-radius: 0.8rem;
-        cursor: pointer;
-
 
         &:hover {
             background-color: #0056b3;

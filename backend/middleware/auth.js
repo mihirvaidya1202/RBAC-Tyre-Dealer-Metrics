@@ -1,18 +1,28 @@
-const { verifyToken } = require('../utils/jwt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-const auth = (roles) => (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  if (!token) return res.status(401).send('Access denied. No token provided.');
+const auth = (allowedRoles) => async (req, res, next) => {
+  const token = req.header('Authorization')?.split(' ')[1];
+
+  if (!token) return res.status(403).json({ message: 'Access denied. No token provided.' });
 
   try {
-    const decoded = verifyToken(token);
-    if (!roles.includes(decoded.role)) {
-      return res.status(403).send('Forbidden. Insufficient permissions.');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select('-password');
+
+    if (!user) {
+      return res.status(403).json({ message: 'User not found' });
     }
-    req.user = decoded;
+
+    if (allowedRoles && !allowedRoles.includes(user.role.toLowerCase())) {
+      return res.status(403).json({ message: 'Access denied. Unauthorized role.' });
+    }
+
+    req.user = user;
     next();
-  } catch (err) {
-    res.status(400).send('Invalid token.');
+  } catch (error) {
+    console.error('Authentication error:', error);
+    res.status(401).json({ message: 'Invalid token' });
   }
 };
 

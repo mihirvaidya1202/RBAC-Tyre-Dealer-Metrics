@@ -5,15 +5,12 @@
 
     let chart;
 
-    // Load tyre stocks when the component mounts
     onMount(async () => {
         await loadTyreStocks();
 
-        // Render the chart after data is loaded
         renderChart();
     });
 
-    // Render the analytics chart
     function renderChart() {
         const ctx = document.getElementById('analyticsChart').getContext('2d');
         if (chart) chart.destroy();

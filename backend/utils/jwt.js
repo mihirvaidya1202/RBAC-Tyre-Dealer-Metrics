@@ -10,7 +10,31 @@ const generateToken = (user) => {
 };
 
 const verifyToken = (token) => {
-  return jwt.verify(token, secret);
+  try {
+    return jwt.verify(token, secret);
+  } catch (error) {
+    throw new Error('Invalid or expired token');
+  }
 };
 
-module.exports = { generateToken, verifyToken };
+const authMiddleware = (allowedRoles) => (req, res, next) => {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+  if (!token) {
+    return res.status(401).json({ message: 'No token, authorization denied' });
+  }
+
+  try {
+    const decoded = verifyToken(token);
+
+    if (!allowedRoles.includes(decoded.role)) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: error.message });
+  }
+};
+
+module.exports = { generateToken, verifyToken, authMiddleware };

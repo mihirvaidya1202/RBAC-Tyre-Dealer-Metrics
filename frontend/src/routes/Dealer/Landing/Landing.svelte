@@ -1,170 +1,224 @@
 <script>
     import { onMount } from 'svelte';
-    import { tyreStocks, dealerStockStore, loadTyreStocks, addToDealerStock, loadDealerStockFromLocalStorage } from '../../../lib/stores';
+    import { navigate } from 'svelte-routing';
+    import { dealerStockStore, removeFromDealerStock, tyreStocks, addToDealerStock } from '../../../lib/stores';
     import { tyreStockApi } from '../../../lib/api';
-  
+
     let error = null;
-  
+    let isLoading = false;
+    let dealerId = null;
+    let quantities = [];
+
     onMount(async () => {
-      try {
-        await loadTyreStocks();
-        loadDealerStockFromLocalStorage();
-      } catch (err) {
-        error = err.message;
-      }
-    });
-  
-    const handleBuy = async (id, quantity) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+
         try {
-            console.log("Buying stock ID:", id, "Quantity:", quantity);
+            const decodedToken = JSON.parse(atob(token.split('.')[1]));
+            dealerId = decodedToken.userId;
 
-            if (!id || !quantity || isNaN(quantity)) {
-            console.error("Invalid stock ID or quantity:", { id, quantity });
-            return;
-            }
+            isLoading = true;
 
-            const updatedStock = await tyreStockApi.buyTyreStock(id, quantity);
-            console.log("API Response (updatedStock):", updatedStock);
+            const adminStock = await tyreStockApi.fetchTyreStocks(token);
+            tyreStocks.set(adminStock);
+            quantities = new Array(adminStock.length).fill(1);
 
-            const fullStock = $tyreStocks.find(stock => stock._id === id);
-            console.log("Found full stock details:", fullStock);
+            const dealerStock = await tyreStockApi.getDealerStock(token);
+            dealerStockStore.set(dealerStock);
 
-            if (!fullStock) {
-            console.error("Stock details not found for ID:", id);
-            return;
-            }
-
-            const purchasedStock = {
-            ...fullStock,
-            quantity,
-            };
-
-            console.log("Final Purchased Stock:", purchasedStock);
-
-            await loadTyreStocks();
-
-            addToDealerStock(purchasedStock);
-
-            console.log('Purchase successful:', purchasedStock);
+            error = null;
         } catch (err) {
-            console.error("Error in handleBuy:", err);
-            error = err.message;
+            console.error("Error fetching stock:", err);
+            error = err.message || "Failed to load stock.";
+        } finally {
+            isLoading = false;
         }
-        };
+    });
 
-  </script>
-  
-  <!-- <style lang="scss">
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 2rem;
-  
-      th, td {
-        padding: 1rem;
-        border: 1px solid #ddd;
-        text-align: left;
-      }
-  
-      th {
-        background-color: #f4f4f4;
-      }
-  
-      input {
-        width: 60px;
-        padding: 0.5rem;
-        margin-right: 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-      }
-  
-      button {
-        padding: 0.5rem 1rem;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-  
-        &:hover {
-          background-color: #0056b3;
-        }
-  
-        &:disabled {
-          background-color: #ccc;
-          cursor: not-allowed;
-        }
-      }
+    const handleAddToDealerStock = async (stock, quantity) => {
+    if (!quantity || quantity < 1 || quantity > stock.quantity) {
+        error = "Invalid quantity selected.";
+        return;
     }
-  
-    .error {
-      color: red;
-      margin-bottom: 1rem;
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+        error = 'You must be logged in to add stock.';
+        navigate('/login');
+        return;
     }
-  </style> -->
-  
+
+    try {
+        isLoading = true;
+
+        await tyreStockApi.addToDealerStock(stock._id, quantity, token);
+
+        const updatedDealerStock = await tyreStockApi.getDealerStock(token);
+        dealerStockStore.set(updatedDealerStock);
+
+        const updatedAdminStock = await tyreStockApi.fetchTyreStocks(token);
+        tyreStocks.set(updatedAdminStock);
+
+        error = null;
+    } catch (err) {
+        console.error("Error in handleAddToDealerStock:", err);
+        error = err.message || 'Failed to add stock. Please try again.';
+    } finally {
+        isLoading = false;
+    }
+};
+
+
+
+    const handleRemove = async (id) => {
+        if (!id) {
+            error = "Invalid stock ID.";
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            error = 'You must be logged in to remove stock.';
+            navigate('/login');
+            return;
+        }
+
+        try {
+            isLoading = true;
+            await tyreStockApi.removeFromDealerStock(id, token);
+            removeFromDealerStock(id);
+            error = null;
+        } catch (err) {
+            console.error("Error in handleRemove:", err);
+            error = err.message || 'Failed to remove stock. Please try again.';
+        } finally {
+            isLoading = false;
+        }
+    };
+</script>
+
 <h1>Dealer Dashboard</h1>
 
-{#if error}
-<p class="error">{error}</p>
+{#if isLoading}
+    <p>Loading...</p>
 {/if}
 
-<h2>Available Tyre Stocks</h2>
-<table>
-<thead>
-    <tr>
-    <th>Tyre Model</th>
-    <th>Tyre Size</th>
-    <th>Quantity</th>
-    <th>Price</th>
-    <th>Action</th>
-    </tr>
-</thead>
-<tbody>
-    {#each $tyreStocks as stock}
-    <tr>
-        <td>{stock.tyreModel}</td>
-        <td>{stock.tyreSize}</td>
-        <td>{stock.quantity}</td>
-        <td>${stock.price}</td>
-        <td>
-        <input
-            type="number"
-            min="1"
-            max={stock.quantity}
-            bind:value={stock.selectedQuantity}
-            placeholder="Qty"
-        />
-        <button
-            on:click={() => handleBuy(stock._id, stock.selectedQuantity)}
-            disabled={!stock.selectedQuantity || stock.selectedQuantity > stock.quantity}
-        >
-            Buy
-        </button>
-        </td>
-    </tr>
-    {/each}
-</tbody>
-</table>
+<h2>Available Tyre Stocks from Admin</h2>
 
-<h2>Your Purchased Tyre Stocks</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Tyre Model</th>
-      <th>Tyre Size</th>
-      <th>Quantity</th>
-      <th>Price</th>
-    </tr>
-  </thead>
-  <tbody>
-    {#each $dealerStockStore as stock}
-      <tr>
-        <td>{stock.tyreModel}</td>
-        <td>{stock.tyreSize}</td>
-        <td>{stock.quantity}</td>
-        <td>${stock.price}</td>
-      </tr>
-    {/each}
-  </tbody>
-</table>
+{#if $tyreStocks.length === 0}
+    <p>No available stock from admin.</p>
+{:else}
+    <table>
+        <thead>
+            <tr>
+                <th>Tyre Model</th>
+                <th>Tyre Size</th>
+                <th>Available Quantity</th>
+                <th>Price</th>
+                <th>Quantity to Add</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {#each $tyreStocks as stock, index}
+                <tr>
+                    <td>{stock.tyreModel}</td>
+                    <td>{stock.tyreSize}</td>
+                    <td>{stock.quantity}</td>
+                    <td>${stock.price}</td>
+                    <td>
+                        <input type="number" min="1" max={stock.quantity} bind:value={quantities[index]} />
+                    </td>
+                    <td>
+                        <button on:click={() => handleAddToDealerStock(stock, quantities[index])} disabled={isLoading}>
+                            Add to My Stock
+                        </button>
+                    </td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
+{/if}
+
+<h2>Your Tyre Stocks</h2>
+
+{#if error}
+    <p class="error">{error}</p>
+{/if}
+
+{#if !$dealerStockStore || $dealerStockStore.length === 0}
+    <p>No tyre stocks available.</p>
+{:else}
+    <table>
+        <thead>
+            <tr>
+                <th>Tyre Model</th>
+                <th>Tyre Size</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {#each $dealerStockStore as stock}
+                <tr>
+                    <td>{stock.tyreModel}</td>
+                    <td>{stock.tyreSize}</td>
+                    <td>{stock.quantity}</td>
+                    <td>${stock.price}</td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
+{/if}
+
+<style>
+    .error {
+        color: red;
+        margin-bottom: 1rem;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #f4f4f4;
+    }
+
+    button {
+        background-color: #2ecc71;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    button:hover {
+        background-color: #27ae60;
+    }
+
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    input[type="number"] {
+        width: 60px;
+        padding: 5px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+</style>

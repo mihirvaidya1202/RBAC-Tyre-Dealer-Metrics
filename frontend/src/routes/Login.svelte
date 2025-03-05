@@ -8,13 +8,18 @@
 
   const handleLogin = async () => {
     try {
-      const data = await authApi.login(username, password);
-      localStorage.setItem('token', data.token);
-      if (data.role === 'admin') {
+      const credentials = { username, password };
+      const response = await authApi.login(credentials);
+
+      const role = response.role.toLowerCase();
+
+      localStorage.setItem('token', response.token);
+
+      if (role === 'admin') {
         navigate('/admin/landing');
-      } else if (data.role === 'customer') {
+      } else if (role === 'customer') {
         navigate('/customer');
-      } else if (data.role === 'dealer') {
+      } else if (role === 'dealer') {
         navigate('/dealer/landing');
       }
     } catch (err) {
@@ -24,8 +29,8 @@
 </script>
 
 <form on:submit|preventDefault={handleLogin}>
-  <input type="text" bind:value={username} placeholder="Username" />
-  <input type="password" bind:value={password} placeholder="Password" />
+  <input type="text" bind:value={username} placeholder="Username" required />
+  <input type="password" bind:value={password} placeholder="Password" required />
   <button type="submit">Login</button>
   {#if error}<p class="error">{error}</p>{/if}
 </form>

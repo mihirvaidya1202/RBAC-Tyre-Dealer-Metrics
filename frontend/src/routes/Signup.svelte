@@ -7,14 +7,27 @@
   let password = '';
   let role = 'customer';
   let error = '';
+  let isSubmitting = false;
 
   const handleSignup = async () => {
+    error = '';
+    isSubmitting = true;
+
     try {
-      const data = await authApi.register(email, username, password, role);
-      console.log('Signup successful:', data);
+      const userData = { 
+        email: email.trim(), 
+        username: username.trim(), 
+        password, 
+        role: role.toLowerCase()
+      };
+
+      const response = await authApi.register(userData);
       navigate('/login');
     } catch (err) {
-      error = err.message;
+      error = err.message || "Registration failed. Please try again.";
+      console.error("Signup error:", err);
+    } finally {
+      isSubmitting = false;
     }
   };
 </script>
@@ -23,12 +36,17 @@
   <input type="email" bind:value={email} placeholder="Email" required />
   <input type="text" bind:value={username} placeholder="Username" required />
   <input type="password" bind:value={password} placeholder="Password" required />
+
   <select bind:value={role}>
     <option value="customer">Customer</option>
     <option value="dealer">Dealer</option>
     <option value="admin">Admin</option>
   </select>
-  <button type="submit">Signup</button>
+
+  <button type="submit" disabled={isSubmitting}>
+    {isSubmitting ? "Signing Up..." : "Signup"}
+  </button>
+
   {#if error}<p class="error">{error}</p>{/if}
 </form>
 
