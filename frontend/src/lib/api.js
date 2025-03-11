@@ -22,18 +22,18 @@ const request = async (url, method, body = null, token = null) => {
     if (contentType && contentType.includes("application/json")) {
       responseData = await response.json();
     } else {
-      console.warn('⚠️ Non-JSON response received.');
+      console.warn('Non-JSON response received.');
       responseData = null;
     }
 
     if (!response.ok) {
-      console.error('🚨 API Request Error:', responseData?.message || response.statusText);
-      throw new Error(responseData?.message || `❌ Error ${response.status}: ${response.statusText}`);
+      console.error('API Request Error:', responseData?.message || response.statusText);
+      throw new Error(responseData?.message || `Error ${response.status}: ${response.statusText}`);
     }
 
     return responseData;
   } catch (error) {
-    console.error('🚨 API Fetch Error:', error.message);
+    console.error('API Fetch Error:', error.message);
     throw new Error(error.message || 'Failed to fetch data');
   }
 };
@@ -53,4 +53,9 @@ export const tyreStockApi = {
   removeFromDealerStock: async (id, token) => request(`/dealer-stock/${id}`, 'DELETE', null, token),
   getDealerStock: async (token) => request('/dealer/stock', 'GET', null, token),
   addToDealerStock: async (stockId, quantity, token) => request('/dealer/stock/add', 'POST', { stockId, quantity }, token),
+};
+
+export const analyticsApi = {
+  fetchAdminAnalytics: async (token) => request('/admin/analytics', 'GET', null, token),
+  fetchDealerAnalytics: async (token) => request('/dealer/analytics', 'GET', null, token),
 };

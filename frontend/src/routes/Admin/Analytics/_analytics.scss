@@ -1,4 +1,57 @@
-canvas {
-    max-width: 80rem;
-    margin: 1.6rem auto;
+.admin-analytics-page {
+    display: flex
+;
+    flex-direction: column;
+    gap: 6.4rem;
+
+    .tables-container {
+        display: flex;
+        flex-direction: column;
+        gap: 3.2rem;
+
+        &-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2.4rem;
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+            
+            th {
+                background-color: #f2f2f2;
+            }
+    
+            button {
+                padding: 5px 10px;
+                cursor: pointer;
+            }    
+        }
+    }
+    
+    .chartContainer {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background: #fff;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+    
+        canvas {
+            width: 100% !important;
+            height: 400px !important;
+        }
+    }
 }

@@ -28,7 +28,7 @@ export async function addToDealerStock(stock, quantity, token) {
       saveDealerStockToLocalStorage();
 
   } catch (error) {
-      console.error("🚨 Error adding stock to dealer:", error);
+      console.error("Error adding stock to dealer:", error);
       throw new Error("Failed to add stock.");
   }
 }

@@ -5,7 +5,7 @@ if (!User.discriminators?.dealer) {
   const dealerStockSchema = new mongoose.Schema({
     tyreStockId: { type: mongoose.Schema.Types.ObjectId, ref: 'TyreStock', required: true },
     tyreModel: { type: String, required: true },
-    tyreSize: { type: Number, required: true },
+    tyreSize: { type: Number, required: true, enum: [13, 15, 17] },
     price: { type: Number, required: true },
     quantity: { type: Number, required: true },
   }, { _id: false });

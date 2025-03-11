@@ -1,6 +1,5 @@
 <script>
   import { onMount } from 'svelte';
-  import { navigate } from 'svelte-routing';
   import { tyreStocks, loadTyreStocks } from '../../../lib/stores';
   import { tyreStockApi } from '../../../lib/api';
 
@@ -71,10 +70,6 @@
   };
 </script>
 
-<style lang="scss">
-  @import './_landing.scss';
-</style>
-
 <h1 class="page-title">Admin Dashboard - Tyre Stock Management</h1>
 
 {#if error}
@@ -89,7 +84,12 @@
   </div>
   <div class="input-field">
     <span>Tyre Size</span>
-    <input type="text" bind:value={tyreSize} placeholder="Tyre Size" required />
+    <select bind:value={tyreSize} required>
+        <option value="" disabled selected>Select Tyre Size</option>
+        <option value="13">13</option>
+        <option value="15">15</option>
+        <option value="17">17</option>
+    </select>
   </div>
   <div class="input-field">
     <span>Tyre Quantity</span>
@@ -130,3 +130,7 @@
     </tbody>
   </table>
 {/if}
+
+<style lang="scss">
+  @import './_landing.scss';
+</style>

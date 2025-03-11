@@ -3,6 +3,7 @@
   import Login from './routes/Login.svelte';
   import Signup from './routes/Signup.svelte';
   import AdminLanding from './routes/Admin/Landing/Landing.svelte';
+  import AdminAnalytics from './routes/Admin/Analytics/Analytics.svelte';
   import Customer from './routes/Customer.svelte';
   import DealerLanding from './routes/Dealer/Landing/Landing.svelte';
   import '../styles/global.scss';
@@ -12,6 +13,7 @@
   <Route path="/login" component={Login} />
   <Route path="/signup" component={Signup} />
   <Route path="/admin/landing" component={AdminLanding} />
+  <Route path="/admin/analytics" component={AdminAnalytics} />  
   <Route path="/customer" component={Customer} />
   <Route path="/dealer/landing" component={DealerLanding} />
 </Router>

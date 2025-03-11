@@ -3,6 +3,7 @@ const { login } = require('../controllers/authController');
 const Dealer = require('../models/Dealer');
 const Customer = require('../models/Customer');
 const Admin = require('../models/Admin');
+const User = require('../models/User');
 
 const router = express.Router();
 
