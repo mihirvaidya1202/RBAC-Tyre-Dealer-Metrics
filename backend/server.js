@@ -9,6 +9,7 @@ const userRoutes = require('./routes/userRoutes');
 const tyreStockRoutes = require('./routes/tyreStockRoutes');
 const dealerRoutes = require('./routes/dealerRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const customerRoutes = require('./routes/customerRoutes');
 
 const TyreStock = require('./models/TyreStock');
 const User = require('./models/User');
@@ -21,7 +22,6 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// ✅ Authentication Middleware
 const authenticate = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith('Bearer ')) {
@@ -39,14 +39,13 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-// ✅ Route Setup
 app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', tyreStockRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/dealer', dealerRoutes);
+app.use('/api', customerRoutes);
 
-// ✅ Admin Stock Update Route
 app.post('/api/tyre-stocks', authenticate, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -66,7 +65,6 @@ app.post('/api/tyre-stocks', authenticate, async (req, res) => {
   }
 });
 
-// ✅ Fetch Tyre Stocks
 app.get('/api/tyre-stocks', async (req, res) => {
   try {
     const { dealerId } = req.query;
@@ -78,7 +76,6 @@ app.get('/api/tyre-stocks', async (req, res) => {
   }
 });
 
-// ✅ Buy Tyre Stocks (Admin Stock Deduction)
 app.post('/api/tyre-stocks/buy/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
@@ -102,7 +99,6 @@ app.post('/api/tyre-stocks/buy/:id', authenticate, async (req, res) => {
   }
 });
 
-// ✅ Add to Dealer Stock
 app.post('/api/dealer/stock/add', authenticate, async (req, res) => {
   try {
     const { stockId, quantity } = req.body;

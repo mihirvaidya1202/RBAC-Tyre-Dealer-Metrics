@@ -111,7 +111,6 @@
         <p style="color: red;">{error}</p>
     {/if}
 
-    <!-- Dealers Table -->
     <div class="tables-container">
         <div class="tables-container-section">
             <h2>Dealers</h2>
@@ -137,7 +136,6 @@
             </table>
         </div>
 
-        <!-- Tyres Table -->
         <div class="tables-container-section">
             <h2>Tyres</h2>
             <table class="table-tyres">
@@ -161,7 +159,6 @@
         </div>
     </div>
 
-    <!-- Dealer & Tyre Stocks (With Mail Alert) -->
     <div class="tables-container-section">
         <h2>Dealer Stock Monitoring</h2>
         <table class="table-stock">
@@ -194,7 +191,6 @@
         </table>
     </div>
 
-    <!-- Chart Canvas -->
     {#if selectedDealer || selectedTyre}
         <div class="chartContainer">
             <canvas class="analyticsChart"></canvas>

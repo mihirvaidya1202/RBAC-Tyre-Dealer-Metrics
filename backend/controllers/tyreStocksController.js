@@ -106,3 +106,29 @@ exports.buyTyreStock = async (req, res) => {
         res.status(500).json({ message: error.message || 'Something went wrong' });
     }
 };
+
+exports.getAllTyresWithDealers = async (req, res) => {
+    try {
+        const tyres = await TyreStock.find();
+        const dealerStocks = await dealer.find({ stock: { $gt: 0 } });
+
+        const dealerMap = {};
+        dealerStocks.forEach(d => {
+            if (!dealerMap[d.tyreModel]) dealerMap[d.tyreModel] = [];
+            dealerMap[d.tyreModel].push({
+                dealerId: d.dealerId,
+                dealerName: d.dealerName,
+                stock: d.stock
+            });
+        });
+
+        const tyresWithDealers = tyres.map(t => ({
+            ...t.toObject(),
+            dealers: dealerMap[t.tyreModel] || []
+        })).filter(t => t.dealers.length > 0);
+
+        res.json(tyresWithDealers);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching tyres", error: error.message });
+    }
+};

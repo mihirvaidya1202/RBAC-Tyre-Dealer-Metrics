@@ -59,3 +59,15 @@ export const analyticsApi = {
   fetchAdminAnalytics: async (token) => request('/admin/analytics', 'GET', null, token),
   fetchDealerAnalytics: async (token) => request('/dealer/analytics', 'GET', null, token),
 };
+
+export const tyresApi = {
+  getAllTyres: async (token) => request('/tyres', 'GET', null, token),
+  getTyreDetails: async (tyreModel, token) => {
+    if (!tyreModel) {
+      console.error("Tyre model is undefined");
+      return null;
+    }
+    return request(`/tyres/${encodeURIComponent(tyreModel)}`, 'GET', null, token);
+  },
+  buyTyre: async (dealerId, tyreModel, quantity, token) => request('/buy', 'POST', { dealerId, tyreModel, quantity }, token),
+};

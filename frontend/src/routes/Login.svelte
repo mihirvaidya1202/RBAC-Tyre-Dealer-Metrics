@@ -18,7 +18,7 @@
       if (role === 'admin') {
         navigate('/admin/landing');
       } else if (role === 'customer') {
-        navigate('/customer');
+        navigate('/customer/landing');
       } else if (role === 'dealer') {
         navigate('/dealer/landing');
       }
