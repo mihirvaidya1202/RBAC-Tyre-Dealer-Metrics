@@ -1,12 +1,17 @@
 const express = require('express');
-const authenticate = require('../middleware/auth');
 const { getDealerStock, getDealerAnalytics } = require('../controllers/dealerController');
 const { addToDealerStock } = require('../controllers/tyreStocksController');
+const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/stock', authenticate, getDealerStock);
-router.post('/add/:id', authenticate, addToDealerStock);
-router.get('/analytics', authenticate, getDealerAnalytics);
+// Add stock to dealer
+router.post('/stock/add', auth(['dealer']), addToDealerStock);
+
+// Fetch dealer stock
+router.get('/stock', auth(['dealer']), getDealerStock);
+
+// Fetch dealer analytics
+router.get('/analytics', auth(['dealer']), getDealerAnalytics);
 
 module.exports = router;

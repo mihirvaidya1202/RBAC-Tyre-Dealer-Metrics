@@ -1,11 +1,19 @@
 const express = require('express');
-const { buyTyreStock, getAllTyresWithDealers  } = require('../controllers/tyreStocksController');
-const { authMiddleware } = require('../utils/jwt');
+const { addTyreStock, fetchTyreStocks, buyTyreStock, deleteTyreStock } = require('../controllers/tyreStocksController');
+const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-router.post('/:id/buy', authMiddleware(['dealer']), buyTyreStock);
+// Add tyre stock (ensure it uses authentication middleware)
+router.post('/', auth(['admin']), addTyreStock);
 
-router.get("/", getAllTyresWithDealers);
+// Fetch tyre stocks
+router.get('/', auth(['admin', 'dealer']), fetchTyreStocks);
+  
+// Buy tyre stock
+router.post('/buy/:id', auth, buyTyreStock);
+
+// Delete tyre stock
+router.delete('/:id', auth, deleteTyreStock);
 
 module.exports = router;

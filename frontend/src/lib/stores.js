@@ -6,13 +6,13 @@ export const tyreStocks = writable([]);
 export const dealerStockStore = writable([]);
 
 export async function loadTyreStocks(token) {
-    try {
-      const stocks = await tyreStockApi.fetchTyreStocks(token);
-      tyreStocks.set(stocks);
-    } catch (error) {
-      console.error('Error loading tyre stocks:', error.message);
-      throw new Error('Failed to load tyre stocks. Please try again later.');
-    }
+  try {
+    const stocks = await tyreStockApi.fetchTyreStocks(token);
+    tyreStocks.set(stocks);
+  } catch (error) {
+    console.error('Error loading tyre stocks:', error.message);
+    throw new Error('Failed to load tyre stocks. Please try again later.');
+  }
 }
 
 export async function addToDealerStock(stock, quantity, token) {  
@@ -32,7 +32,6 @@ export async function addToDealerStock(stock, quantity, token) {
       throw new Error("Failed to add stock.");
   }
 }
-
 export function removeFromDealerStock(id) {
   dealerStockStore.update((stocks) => {
     const updatedStocks = stocks.filter((stock) => stock._id !== id);

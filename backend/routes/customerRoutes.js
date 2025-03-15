@@ -1,13 +1,22 @@
 const express = require('express');
-const authenticate = require('../middleware/auth');
 const { getAllTyres, getTyreDetails, buyTyre } = require('../controllers/customerController');
+const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/tyres', getAllTyres);
+// Fetch all tyres
+router.get('/customer/tyres', (req, res, next) => {
+    getAllTyres(req, res, next);
+});
 
-router.get('/tyres/:tyreModel', getTyreDetails);
+// Fetch details of a specific tyre
+router.get('/customer/tyres/:tyreModel', (req, res, next) => {
+    getTyreDetails(req, res, next);
+});
 
-router.post('/buy', authenticate, buyTyre);
+// Buy a tyre
+router.post('/customer/buy', auth, (req, res, next) => {
+    buyTyre(req, res, next);
+});
 
 module.exports = router;

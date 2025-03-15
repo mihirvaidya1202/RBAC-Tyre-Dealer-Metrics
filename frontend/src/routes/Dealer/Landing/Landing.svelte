@@ -18,10 +18,9 @@
 
         try {
             const decodedToken = JSON.parse(atob(token.split('.')[1]));
-            dealerId = decodedToken.userId;
+            dealerId = decodedToken.id;
 
             isLoading = true;
-
             const adminStock = await tyreStockApi.fetchTyreStocks(token);
             tyreStocks.set(adminStock);
             quantities = new Array(adminStock.length).fill(1);
@@ -39,39 +38,36 @@
     });
 
     const handleAddToDealerStock = async (stock, quantity) => {
-    if (!quantity || quantity < 1 || quantity > stock.quantity) {
-        error = "Invalid quantity selected.";
-        return;
-    }
+        if (!quantity || quantity < 1 || quantity > stock.quantity) {
+            error = "Invalid quantity selected.";
+            return;
+        }
 
-    const token = localStorage.getItem('token');
-    if (!token) {
-        error = 'You must be logged in to add stock.';
-        navigate('/login');
-        return;
-    }
+        const token = localStorage.getItem('token');
+        if (!token) {
+            error = 'You must be logged in to add stock.';
+            navigate('/login');
+            return;
+        }
 
-    try {
-        isLoading = true;
+        try {
+            isLoading = true;
+            await tyreStockApi.addToDealerStock(stock._id, quantity, token);
 
-        await tyreStockApi.addToDealerStock(stock._id, quantity, token);
+            const updatedDealerStock = await tyreStockApi.getDealerStock(token);
+            dealerStockStore.set(updatedDealerStock);
 
-        const updatedDealerStock = await tyreStockApi.getDealerStock(token);
-        dealerStockStore.set(updatedDealerStock);
+            const updatedAdminStock = await tyreStockApi.fetchTyreStocks(token);
+            tyreStocks.set(updatedAdminStock);
 
-        const updatedAdminStock = await tyreStockApi.fetchTyreStocks(token);
-        tyreStocks.set(updatedAdminStock);
-
-        error = null;
-    } catch (err) {
-        console.error("Error in handleAddToDealerStock:", err);
-        error = err.message || 'Failed to add stock. Please try again.';
-    } finally {
-        isLoading = false;
-    }
-};
-
-
+            error = null;
+        } catch (err) {
+            console.error("Error in handleAddToDealerStock:", err);
+            error = err.message || 'Failed to add stock. Please try again.';
+        } finally {
+            isLoading = false;
+        }
+    };
 
     const handleRemove = async (id) => {
         if (!id) {

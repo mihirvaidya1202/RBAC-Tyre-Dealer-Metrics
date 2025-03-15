@@ -46,13 +46,21 @@ export const authApi = {
 };
 
 export const tyreStockApi = {
-  fetchTyreStocks: async (token) => request('/tyre-stocks', 'GET', null, token),
-  addTyreStock: async (stock, token) => request('/tyre-stocks', 'POST', stock, token),
+  fetchTyreStocks: async (token) => {
+    try {
+      const response = await request('/tyre-stocks', 'GET', null, token); // Pass token as the fourth argument
+      return response;
+    } catch (error) {
+      console.error('Error fetching tyre stocks:', error);
+      throw new Error('Failed to fetch tyre stocks');
+    }
+  },
+  addTyreStock: async (stock, token) => { return request('/tyre-stocks', 'POST', stock, token);},
   buyTyreStock: async (id, quantity, token) => request(`/tyre-stocks/buy/${id}`, 'POST', { quantity }, token),
   deleteTyreStock: async (id, token) => request(`/tyre-stocks/${id}`, 'DELETE', null, token),
   removeFromDealerStock: async (id, token) => request(`/dealer-stock/${id}`, 'DELETE', null, token),
   getDealerStock: async (token) => request('/dealer/stock', 'GET', null, token),
-  addToDealerStock: async (stockId, quantity, token) => request('/dealer/stock/add', 'POST', { stockId, quantity }, token),
+  addToDealerStock: async (stockId, quantity, token) => { return request('/dealer/stock/add', 'POST', { stockId, quantity }, token);},
 };
 
 export const analyticsApi = {
@@ -61,13 +69,22 @@ export const analyticsApi = {
 };
 
 export const tyresApi = {
-  getAllTyres: async (token) => request('/tyres', 'GET', null, token),
-  getTyreDetails: async (tyreModel, token) => {
-    if (!tyreModel) {
-      console.error("Tyre model is undefined");
-      return null;
+  getAllTyres: async () => {
+    try {
+        const response = await fetch('/api/customer/tyres');
+
+        if (!response.ok) {
+            console.error("API Error:", response.statusText);
+            throw new Error(`Failed to fetch tyres: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (err) {
+        console.error("API Fetch Error:", err);
+        throw err;
     }
-    return request(`/tyres/${encodeURIComponent(tyreModel)}`, 'GET', null, token);
-  },
-  buyTyre: async (dealerId, tyreModel, quantity, token) => request('/buy', 'POST', { dealerId, tyreModel, quantity }, token),
+},
+  getTyreDetails: async (tyreModel, token) => request(`/customer/tyres/${encodeURIComponent(tyreModel)}`, 'GET', null, token),
+  buyTyre: async (dealerId, tyreModel, quantity, token) => request('/customer/buy', 'POST', { dealerId, tyreModel, quantity }, token),
 };

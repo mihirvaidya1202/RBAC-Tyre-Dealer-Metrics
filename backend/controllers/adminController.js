@@ -10,7 +10,7 @@ const getAdminAnalytics = async (req, res) => {
             .populate("dealerStock.tyreStockId", "tyreModel tyreSize quantity price");
 
         if (!dealers.length) {
-            console.log("No dealers found!");
+            console.error("No dealers found!");
         }
 
         const analyticsData = dealers.map(dealer => ({
