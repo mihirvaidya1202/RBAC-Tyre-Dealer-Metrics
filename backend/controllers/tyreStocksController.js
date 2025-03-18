@@ -11,13 +11,13 @@ exports.addToDealerStock = async (req, res) => {
   
       const stock = await TyreStock.findById(stockId);
       if (!stock || stock.quantity < quantity) {
-        console.error('Not enough stock available'); // Log if stock is insufficient
+        console.error('Not enough stock available');
         return res.status(400).json({ message: 'Not enough stock available' });
       }
   
       const dealer = await User.findById(dealerId);
       if (!dealer) {
-        console.error('Dealer not found'); // Log if dealer is not found
+        console.error('Dealer not found');
         return res.status(404).json({ message: 'Dealer not found' });
       }
   
@@ -43,9 +43,8 @@ exports.addToDealerStock = async (req, res) => {
       console.error('Error in addToDealerStock:', error);
       res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
-  };
+};
 
-// Buy tyre stock
 exports.buyTyreStock = async (req, res) => {
     const { id } = req.params;
     const { quantity } = req.body;
@@ -99,7 +98,6 @@ exports.buyTyreStock = async (req, res) => {
     }
 };
 
-// Fetch all tyres with dealer stock
 exports.getAllTyresWithDealers = async (req, res) => {
     try {
         const tyres = await TyreStock.find();
@@ -129,7 +127,6 @@ exports.getAllTyresWithDealers = async (req, res) => {
     }
 };
 
-// Example in a route handler
 exports.addTyreStock = async (req, res) => {
     try {
         const { tyreModel, tyreSize, quantity, price } = req.body;
@@ -141,7 +138,7 @@ exports.addTyreStock = async (req, res) => {
         await newStock.save();
         res.status(201).json(newStock);
     } catch (error) {
-        console.error('Error in addTyreStock:', error); // Log errors
+        console.error('Error in addTyreStock:', error);
         res.status(500).json({ message: 'Error adding tyre stock', error: error.message });
     }
 };

@@ -48,7 +48,7 @@ export const authApi = {
 export const tyreStockApi = {
   fetchTyreStocks: async (token) => {
     try {
-      const response = await request('/tyre-stocks', 'GET', null, token); // Pass token as the fourth argument
+      const response = await request('/tyre-stocks', 'GET', null, token);
       return response;
     } catch (error) {
       console.error('Error fetching tyre stocks:', error);
@@ -69,22 +69,8 @@ export const analyticsApi = {
 };
 
 export const tyresApi = {
-  getAllTyres: async () => {
-    try {
-        const response = await fetch('/api/customer/tyres');
-
-        if (!response.ok) {
-            console.error("API Error:", response.statusText);
-            throw new Error(`Failed to fetch tyres: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        return data;
-    } catch (err) {
-        console.error("API Fetch Error:", err);
-        throw err;
-    }
-},
-  getTyreDetails: async (tyreModel, token) => request(`/customer/tyres/${encodeURIComponent(tyreModel)}`, 'GET', null, token),
-  buyTyre: async (dealerId, tyreModel, quantity, token) => request('/customer/buy', 'POST', { dealerId, tyreModel, quantity }, token),
+  getAllTyres: async () => {return await request('/customer/tyres', 'GET');},
+  getTyreDetails: async (tyreModel, tyreSize, token) => {return await request(`/customer/tyres/${encodeURIComponent(tyreModel)}/${tyreSize}`, 'GET', null, token);},
+  buyTyre: async (dealerId, tyreId, quantity, token) => {return await request('/customer/buy', 'POST', { dealerId, tyreId, quantity }, token)},
+  getPurchaseHistory: async (token) => {return await request('/customer/purchase-history', 'GET', null, token);},
 };

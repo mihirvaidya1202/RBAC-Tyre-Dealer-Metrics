@@ -11,22 +11,21 @@
     let errorMessage = "";
 
     async function fetchTyres() {
-        try {
-            const data = await tyresApi.getAllTyres();
+    try {
+        const data = await tyresApi.getAllTyres();
 
-            if (data && Array.isArray(data)) {
-                tyres = data.filter(t => t.dealerId && t.dealerId.dealerStock.length > 0);
-                filteredTyres = [...tyres];
-            } else {
-                errorMessage = "Invalid data received.";
-                console.error("Invalid data:", data);
-            }
-        } catch (err) {
-            console.error("Error fetching tyres:", err);
-            errorMessage = "Failed to load tyres.";
+        if (data && Array.isArray(data)) {
+            filteredTyres = [...data];
+        } else {
+            errorMessage = "Invalid data received.";
+            console.error("Invalid data:", data);
         }
-        loading = false;
+    } catch (err) {
+        console.error("Error fetching tyres:", err);
+        errorMessage = "Failed to load tyres.";
     }
+    loading = false;
+}
 
     function updateSearchResults(event) {
         searchQuery = event.target.value.toLowerCase();
@@ -99,24 +98,24 @@
         <p>Loading tyres...</p>
     {:else if errorMessage}
         <p style="color: red;">⚠️ {errorMessage}</p>
-    {:else if tyres.length === 0}
+    {:else if filteredTyres.length === 0}
         <p>No tyres available from dealers.</p>
     {:else}
         <div class="tyre-list">
-            {#each tyres as tyre (tyre.tyreModel + '-' + tyre.tyreSize)}
-                {@const key = `${tyre.tyreModel}-${tyre.tyreSize}`}
+            {#each filteredTyres as filteredTyre (filteredTyre.tyreModel + '-' + filteredTyre.tyreSize)}
+                {@const key = `${filteredTyre.tyreModel}-${filteredTyre.tyreSize}`}
                 <div
                     class="tyre-card"
-                    on:click={() => goToTyrePage(tyre)}
-                    on:keydown={(e) => e.key === "Enter" && goToTyrePage(tyre)}
+                    on:click={() => goToTyrePage(filteredTyre)}
+                    on:keydown={(e) => e.key === "Enter" && goToTyrePage(filteredTyre)}
                     bind:this={tyreRefs[key]}
                     role="button"
                     tabindex="0"
                 >
-                    <h2>{tyre.tyreModel}</h2>
-                    <p>Size: {tyre.tyreSize}</p>
-                    <p>Price: ${tyre.price}</p>
-                    <p>Stock: {tyre.dealerId.dealerStock.reduce((sum, d) => sum + d.quantity, 0)}</p>
+                    <h2>{filteredTyre.tyreModel}</h2>
+                    <p>Size: {filteredTyre.tyreSize} inches</p>
+                    <p>Price: ${filteredTyre.price}</p>
+                    <p>Stock: {filteredTyre.quantity}</p>
                 </div>
             {/each}
         </div>
