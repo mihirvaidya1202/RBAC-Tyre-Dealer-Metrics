@@ -65,12 +65,20 @@ export const tyreStockApi = {
 
 export const analyticsApi = {
   fetchAdminAnalytics: async (token) => request('/admin/analytics', 'GET', null, token),
-  fetchDealerAnalytics: async (token) => request('/dealer/analytics', 'GET', null, token),
+  fetchDealerAnalytics: async (token) => {
+    return await request('/dealer/analytics', 'GET', null, token);
+  },
 };
 
 export const tyresApi = {
-  getAllTyres: async () => {return await request('/customer/tyres', 'GET');},
-  getTyreDetails: async (tyreModel, tyreSize, token) => {return await request(`/customer/tyres/${encodeURIComponent(tyreModel)}/${tyreSize}`, 'GET', null, token);},
-  buyTyre: async (dealerId, tyreId, quantity, token) => {return await request('/customer/buy', 'POST', { dealerId, tyreId, quantity }, token)},
-  getPurchaseHistory: async (token) => {return await request('/customer/purchase-history', 'GET', null, token);},
+  getAllTyres: async () => { return await request('/customer/tyres', 'GET'); },
+  getTyreDetails: async (tyreModel, tyreSize, token) => { return await request(`/customer/tyres/${encodeURIComponent(tyreModel)}/${tyreSize}`, 'GET', null, token); },
+  buyTyre: async (dealerId, tyreId, quantity, token) => { return await request('/customer/buy', 'POST', { dealerId, tyreId, quantity }, token); },
+  getPurchaseHistory: async (token) => { return await request('/customer/purchase-history', 'GET', null, token); },
+  updateDealerRating: async (token, orderId, { dealerRating }) => {
+    return await request('/customer/update-dealer-rating', 'POST', { orderId, dealerRating }, token);
+  },
+  updateTyreRating: async (token, orderId, { tyreRating }) => {
+    return await request('/customer/update-tyre-rating', 'POST', { orderId, tyreRating }, token);
+  },
 };

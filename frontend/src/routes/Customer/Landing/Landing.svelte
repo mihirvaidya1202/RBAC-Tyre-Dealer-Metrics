@@ -115,7 +115,6 @@
                     <h2>{filteredTyre.tyreModel}</h2>
                     <p>Size: {filteredTyre.tyreSize} inches</p>
                     <p>Price: ${filteredTyre.price}</p>
-                    <p>Stock: {filteredTyre.quantity}</p>
                 </div>
             {/each}
         </div>

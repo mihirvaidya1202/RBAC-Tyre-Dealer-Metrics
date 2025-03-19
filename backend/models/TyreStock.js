@@ -6,6 +6,7 @@ const tyreStockSchema = new mongoose.Schema({
     quantity: { type: Number, required: true },
     price: { type: Number, required: true },
     dealerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
+    averageRating: { type: Number, default: 0 },
   }, { timestamps: true });  
 
 module.exports = mongoose.model('TyreStock', tyreStockSchema);

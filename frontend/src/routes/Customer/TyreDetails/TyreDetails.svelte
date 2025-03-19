@@ -10,7 +10,7 @@
     let dealerStockDetails = [];
     let errorMessage = "";
     let quantities = {};
-    let token = null
+    let token = null;
 
     onMount(async () => {
         token = localStorage.getItem('token');
@@ -48,7 +48,6 @@
 
         try {
             const response = await tyresApi.buyTyre(dealerId, tyreId, quantity, token);
-
             navigate('/customer/purchase-history');
         } catch (err) {
             console.error("Error purchasing tyre:", err);
@@ -64,30 +63,34 @@
         <p>Loading...</p>
     {:else}
         <h1>{tyre.tyreModel} - {tyre.tyreSize}</h1>
-        <p>Price: ${tyre.price}</p>
 
         <h2>Available Dealers</h2>
         {#if dealerStockDetails.length > 0}
             <ul>
                 {#each dealerStockDetails as dealer}
-                    <li>
-                        <p>Dealer: {dealer.dealerName}</p>
-                        <p>Quantity Available: {dealer.quantity}</p>
-                        <label for={`quantity-${dealer.dealerId}`}>Quantity:</label>
-                        <input
-                            type="number"
-                            id={`quantity-${dealer.dealerId}`}
-                            bind:value={quantities[dealer.dealerId]}
-                            min="1"
-                            max={dealer.quantity}
-                        />
-                        <button
-                            on:click={() => handleBuy(dealer.dealerId, tyre._id)}
-                            disabled={quantities[dealer.dealerId] > dealer.quantity || quantities[dealer.dealerId] <= 0}
-                        >
-                            Buy
-                        </button>
-                    </li>
+                    {#if dealer.quantity != 0}
+                        <li>
+                            <p>Dealer: {dealer.dealerName}</p>
+                            <p>Average Rating: {dealer.averageRating ?? 'No ratings yet'}</p>
+                            <p>Quantity Available: {dealer.quantity}</p>
+                            <!-- we will change this if we decide to add different selling price for each dealer -->
+                            <p>Price: ${tyre.price}</p> 
+                            <label for={`quantity-${dealer.dealerId}`}>Quantity:</label>
+                            <input
+                                type="number"
+                                id={`quantity-${dealer.dealerId}`}
+                                bind:value={quantities[dealer.dealerId]}
+                                min="1"
+                                max={dealer.quantity}
+                            />
+                            <button
+                                on:click={() => handleBuy(dealer.dealerId, tyre._id)}
+                                disabled={quantities[dealer.dealerId] > dealer.quantity || quantities[dealer.dealerId] <= 0}
+                            >
+                                Buy
+                            </button>
+                        </li>
+                    {/if}
                 {/each}
             </ul>
         {:else}

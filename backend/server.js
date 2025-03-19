@@ -26,7 +26,6 @@ app.use('/api/tyre-stocks', tyreStockRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/dealer', dealerRoutes);
 app.use('/api/customer', customerRoutes);
-console.log('Customer routes mounted at /api/customer');
 
 const PORT = process.env.PORT || 8000;
 

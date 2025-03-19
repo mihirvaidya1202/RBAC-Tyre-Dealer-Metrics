@@ -2,6 +2,7 @@ const TyreStock = require('../models/TyreStock');
 const Dealer = require('../models/Dealer');
 const Customer = require('../models/Customer');
 const { verifyToken } = require('../utils/jwt');
+const { updateAverageRating, updateAllAverageRatings } = require('../utils/ratingUtils');
 
 exports.getAllTyres = async (req, res) => {
     try {
@@ -52,9 +53,10 @@ exports.getTyreDetails = async (req, res) => {
             );
 
             return {
-                dealerId: dealer._id,
-                dealerName: dealer.username,
+                dealerId: dealer?._id,
+                dealerName: dealer?.username,
                 quantity: stockItem ? stockItem.quantity : 0,
+                averageRating: dealer?.averageRating
             };
         });
 
@@ -142,5 +144,61 @@ exports.getPurchaseHistory = async (req, res) => {
     } catch (err) {
         console.error("Error fetching purchase history:", err);
         res.status(500).json({ message: "Failed to fetch purchase history", error: err.message });
+    }
+};
+
+exports.updateDealerRating = async (req, res) => {
+    const { orderId, dealerRating } = req.body;
+
+    const userId = req.user._id;
+
+    try {
+        const customer = await Customer.findById(userId);
+        if (!customer) {
+            return res.status(404).json({ message: "Customer not found" });
+        }
+
+        const order = customer.orderHistory.id(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        order.orderDealerRating = dealerRating;
+        await customer.save();
+
+        await updateAverageRating(order.dealerId, 'dealer');
+
+        res.status(200).json({ message: "Dealer rating updated successfully", order });
+    } catch (err) {
+        console.error("Error updating dealer rating:", err);
+        res.status(500).json({ message: "Failed to update dealer rating", error: err.message });
+    }
+};
+
+exports.updateTyreRating = async (req, res) => {
+    const { orderId, tyreRating } = req.body;
+
+    const userId = req.user._id;
+
+    try {
+        const customer = await Customer.findById(userId);
+        if (!customer) {
+            return res.status(404).json({ message: "Customer not found" });
+        }
+
+        const order = customer.orderHistory.id(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        order.orderTyreRating = tyreRating;
+        await customer.save();
+
+        await updateAverageRating(order.tyreId, 'TyreStock');
+
+        res.status(200).json({ message: "Tyre rating updated successfully", order });
+    } catch (err) {
+        console.error("Error updating tyre rating:", err);
+        res.status(500).json({ message: "Failed to update tyre rating", error: err.message });
     }
 };

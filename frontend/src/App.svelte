@@ -8,6 +8,7 @@
   import TyreDetails from "./routes/Customer/TyreDetails/TyreDetails.svelte";
   import OrderDetails from "./routes/Customer/OrderDetails/OrderDetails.svelte"
   import DealerLanding from './routes/Dealer/Landing/Landing.svelte';
+  import DealerAnalytics from './routes/Dealer/Analytics/Analytics.svelte'
   import '../styles/global.scss';
 </script>
 
@@ -20,4 +21,5 @@
   <Route path="/customer/:tyreModel/:tyreSize" component={TyreDetails} />
   <Route path="/customer/purchase-history" component={OrderDetails} />
   <Route path="/dealer/landing" component={DealerLanding} />
+  <Route path="/dealer/analytics" component={DealerAnalytics} />
 </Router>

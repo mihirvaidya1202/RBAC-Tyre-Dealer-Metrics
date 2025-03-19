@@ -12,6 +12,7 @@ if (!User.discriminators?.dealer) {
 
   const dealerSchema = new mongoose.Schema({
     dealerStock: [dealerStockSchema],
+    averageRating: { type: Number, default: 0 }, 
   });
 
   User.discriminator('dealer', dealerSchema);

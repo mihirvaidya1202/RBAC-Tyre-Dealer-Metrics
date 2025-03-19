@@ -4,10 +4,12 @@ const User = require('./User');
 if (!User.discriminators?.customer) {
   const orderHistorySchema = new mongoose.Schema({
     tyreId: { type: mongoose.Schema.Types.ObjectId, ref: 'TyreStock', required: true },
-    dealerId: { type: mongoose.Schema.Types.ObjectId, ref: 'dealer', required: true }, 
+    dealerId: { type: mongoose.Schema.Types.ObjectId, ref: 'dealer', required: true },
     quantity: { type: Number, required: true },
     purchaseDate: { type: Date, default: Date.now },
-  }, { _id: false });
+    orderTyreRating: { type: Number, default: 0 },
+    orderDealerRating: { type: Number, default: 0 },
+  });
 
   const customerSchema = new mongoose.Schema({
     orderHistory: [orderHistorySchema],
