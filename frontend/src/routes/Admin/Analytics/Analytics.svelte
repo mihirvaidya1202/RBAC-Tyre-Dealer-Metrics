@@ -17,6 +17,7 @@
         }
     ]
 
+    const landingPage = '/admin/landing'
 
     async function fetchAdminAnalytics() {
         const token = localStorage.getItem('token');
@@ -115,7 +116,7 @@
 
 
 <div class="admin-analytics-page">
-    <Navbar {navbarItems} />
+    <Navbar {navbarItems} {landingPage} />
 
     <div class="page-content">
         <h1 class="page-title">Admin Analytics</h1>

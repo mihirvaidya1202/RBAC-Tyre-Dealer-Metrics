@@ -1,8 +1,10 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    
-    export let navbarItems: Array<{ label: string; url: string }> = [];
+
     let isLoggedIn = false;
+
+    export let navbarItems: Array<{ label: string; url: string }> = [];
+    export let landingPage: string = '#'
   
     onMount(() => {
       const token = localStorage.getItem('token');
@@ -18,7 +20,7 @@
   
   <nav class="navbar">
     <div class="navbar-brand">
-      <a href="/" class="navbar-logo">Your App</a>
+      <a href={landingPage} class="navbar-logo">Your App</a>
     </div>
   
     <div class="navbar-links">

@@ -21,6 +21,8 @@
         },
     ]
 
+    const landingPage = '/customer/landing'
+
     async function fetchPurchaseHistory() {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -112,7 +114,7 @@
     }
 </script>
 
-<Navbar {navbarItems} />
+<Navbar {navbarItems} {landingPage} />
 <main>
     <h1>Order Details</h1>
 

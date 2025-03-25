@@ -17,6 +17,8 @@
         }
     ]
 
+    const landingPage = '/dealer/landing'
+
     onMount(async () => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -91,7 +93,7 @@
     }
 </script>
 
-<Navbar {navbarItems} />
+<Navbar {navbarItems} {landingPage} />
 <main>
     {#if error}
         <p>{error}</p>

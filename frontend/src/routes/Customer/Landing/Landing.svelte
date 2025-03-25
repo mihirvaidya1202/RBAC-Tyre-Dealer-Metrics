@@ -22,6 +22,8 @@
         },
     ]
 
+    const landingPage = '/customer/landing'
+
     async function fetchTyres() {
     try {
         const data = await tyresApi.getAllTyres();
@@ -76,7 +78,7 @@
 </style>
 
 <div class="landing-page">
-    <Navbar {navbarItems} />
+    <Navbar {navbarItems} {landingPage} />
 
     <h1>Find Your Tyre</h1>
 

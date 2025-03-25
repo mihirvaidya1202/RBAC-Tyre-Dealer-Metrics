@@ -16,6 +16,8 @@
           url: '/admin/analytics'
       }
   ]
+  
+  const landingPage = '/admin/landing'
 
   onMount(async () => {
     try {
@@ -79,7 +81,7 @@
 </script>
 
 <div class="landing-page">
-  <Navbar {navbarItems} />
+  <Navbar {navbarItems} {landingPage} />
 
   <div class="page-content">
     <h1 class="page-title">Admin Dashboard - Tyre Stock Management</h1>
