@@ -2,12 +2,21 @@
     import { onMount, tick } from 'svelte';
     import { Chart } from 'chart.js/auto';
     import { analyticsApi } from '../../../lib/api';
+    import Navbar from '../../../components/Navbar/Navbar.svelte';
 
     let analyticsData = [];
     let error = null;
     let selectedDealer = null;
     let selectedTyre = null;
     let chart = null;
+
+    const navbarItems = [
+        {
+            label: 'Dashboard',
+            url: '/admin/landing'
+        }
+    ]
+
 
     async function fetchAdminAnalytics() {
         const token = localStorage.getItem('token');
@@ -104,100 +113,105 @@
     onMount(fetchAdminAnalytics);
 </script>
 
+
 <div class="admin-analytics-page">
-    <h1 class="page-title">Admin Analytics</h1>
+    <Navbar {navbarItems} />
 
-    {#if error}
-        <p style="color: red;">{error}</p>
-    {/if}
+    <div class="page-content">
+        <h1 class="page-title">Admin Analytics</h1>
 
-    <div class="tables-container">
+        {#if error}
+            <p style="color: red;">{error}</p>
+        {/if}
+
+        <div class="tables-container">
+            <div class="tables-container-section">
+                <h2>Dealers</h2>
+                <table class="table-dealer">
+                    <thead>
+                        <tr>
+                            <th>Dealer Name</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#each analyticsData as dealer}
+                            <tr>
+                                <td>{dealer.dealerName}</td>
+                                <td>{dealer.email}</td>
+                                <td>
+                                    <button on:click={() => analyzeDealer(dealer)}>Analyze This Dealer</button>
+                                </td>
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tables-container-section">
+                <h2>Tyres</h2>
+                <table class="table-tyres">
+                    <thead>
+                        <tr>
+                            <th>Tyre Model</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#each [...new Set(analyticsData.flatMap(dealer => dealer.stocks.map(stock => stock.tyreModel)))] as tyreModel}
+                            <tr>
+                                <td>{tyreModel}</td>
+                                <td>
+                                    <button on:click={() => analyzeTyre(tyreModel)}>Analyze This Tyre</button>
+                                </td>
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="tables-container-section">
-            <h2>Dealers</h2>
-            <table class="table-dealer">
+            <h2>Dealer Stock Monitoring</h2>
+            <table class="table-stock">
                 <thead>
                     <tr>
                         <th>Dealer Name</th>
                         <th>Email</th>
+                        <th>Tyre Model</th>
+                        <th>Stock</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {#each analyticsData as dealer}
-                        <tr>
-                            <td>{dealer.dealerName}</td>
-                            <td>{dealer.email}</td>
-                            <td>
-                                <button on:click={() => analyzeDealer(dealer)}>Analyze This Dealer</button>
-                            </td>
-                        </tr>
+                        {#each dealer.stocks as tyre}
+                            {#if tyre.quantity < 5}
+                                <tr>
+                                    <td>{dealer.dealerName}</td>
+                                    <td>{dealer.email}</td>
+                                    <td>{tyre.tyreModel}</td>
+                                    <td>{tyre.quantity}</td>
+                                    <td>
+                                        <button on:click={() => sendMail(dealer, tyre)}>Send Mail</button>
+                                    </td>
+                                </tr>
+                            {/if}
+                        {/each}
                     {/each}
                 </tbody>
             </table>
         </div>
 
-        <div class="tables-container-section">
-            <h2>Tyres</h2>
-            <table class="table-tyres">
-                <thead>
-                    <tr>
-                        <th>Tyre Model</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each [...new Set(analyticsData.flatMap(dealer => dealer.stocks.map(stock => stock.tyreModel)))] as tyreModel}
-                        <tr>
-                            <td>{tyreModel}</td>
-                            <td>
-                                <button on:click={() => analyzeTyre(tyreModel)}>Analyze This Tyre</button>
-                            </td>
-                        </tr>
-                    {/each}
-                </tbody>
-            </table>
-        </div>
+        {#if selectedDealer || selectedTyre}
+            <div class="chartContainer">
+                <canvas class="analyticsChart"></canvas>
+            </div>
+        {/if}
     </div>
-
-    <div class="tables-container-section">
-        <h2>Dealer Stock Monitoring</h2>
-        <table class="table-stock">
-            <thead>
-                <tr>
-                    <th>Dealer Name</th>
-                    <th>Email</th>
-                    <th>Tyre Model</th>
-                    <th>Stock</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {#each analyticsData as dealer}
-                    {#each dealer.stocks as tyre}
-                        {#if tyre.quantity < 5}
-                            <tr>
-                                <td>{dealer.dealerName}</td>
-                                <td>{dealer.email}</td>
-                                <td>{tyre.tyreModel}</td>
-                                <td>{tyre.quantity}</td>
-                                <td>
-                                    <button on:click={() => sendMail(dealer, tyre)}>Send Mail</button>
-                                </td>
-                            </tr>
-                        {/if}
-                    {/each}
-                {/each}
-            </tbody>
-        </table>
-    </div>
-
-    {#if selectedDealer || selectedTyre}
-        <div class="chartContainer">
-            <canvas class="analyticsChart"></canvas>
-        </div>
-    {/if}
 </div>
 
 <style lang="scss">
-    @import './_analytics.scss';
+    @use './_analytics.scss' as *;
 </style>

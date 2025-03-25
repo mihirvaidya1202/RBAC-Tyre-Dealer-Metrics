@@ -2,6 +2,8 @@
     import { onMount } from "svelte";
     import { navigate } from "svelte-routing";
     import { tyresApi } from "../../../lib/api";
+    import Navbar from '../../../components/Navbar/Navbar.svelte';
+
 
     export let tyreModel;
     export let tyreSize;
@@ -11,6 +13,17 @@
     let errorMessage = "";
     let quantities = {};
     let token = null;
+
+    const navbarItems = [
+        {
+            label: 'Dashboard',
+            url: '/customer/landing'
+        },
+        {
+            label: 'Purchase History',
+            url: '/customer/purchase-history'
+        },
+    ]
 
     onMount(async () => {
         token = localStorage.getItem('token');
@@ -56,6 +69,7 @@
     };
 </script>
 
+<Navbar {navbarItems} />
 <main>
     {#if errorMessage}
         <p>{errorMessage}</p>
@@ -139,7 +153,7 @@
     }
 
     button {
-        background-color: #007bff;
+        background-color: #27509b;
         color: white;
         border: none;
         padding: 5px 10px;

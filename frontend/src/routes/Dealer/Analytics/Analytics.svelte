@@ -3,11 +3,19 @@
     import { navigate } from "svelte-routing";
     import { analyticsApi } from "../../../lib/api";
     import { Chart } from 'chart.js/auto';
+    import Navbar from '../../../components/Navbar/Navbar.svelte';
 
     let dealer = null;
     let loading = true;
     let error = "";
     let chart;
+
+    const navbarItems = [
+        {
+            label: 'Dashboard',
+            url: '/dealer/landing'
+        }
+    ]
 
     onMount(async () => {
         const token = localStorage.getItem('token');
@@ -83,6 +91,7 @@
     }
 </script>
 
+<Navbar {navbarItems} />
 <main>
     {#if error}
         <p>{error}</p>

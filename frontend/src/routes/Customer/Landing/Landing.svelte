@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { tyresApi } from "../../../lib/api";
+    import Navbar from '../../../components/Navbar/Navbar.svelte';
 
     let tyres = [];
     let filteredTyres = [];
@@ -9,6 +10,17 @@
     let showDropdown = false;
     let loading = true;
     let errorMessage = "";
+
+    const navbarItems = [
+        {
+            label: 'Dashboard',
+            url: '#'
+        },
+        {
+            label: 'Purchase History',
+            url: '/customer/purchase-history'
+        },
+    ]
 
     async function fetchTyres() {
     try {
@@ -64,6 +76,8 @@
 </style>
 
 <div class="landing-page">
+    <Navbar {navbarItems} />
+
     <h1>Find Your Tyre</h1>
 
     <div class="search-container">

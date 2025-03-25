@@ -10,7 +10,7 @@ form {
         flex-direction: column;
         gap: 1.6rem;
 
-        input {
+        input, select {
             padding: 0.8rem;
             font-size: 1.6rem;
         }
@@ -44,13 +44,23 @@ table {
 
     button {
         padding: 0.8rem 1.6rem;
-        background-color: #dc3545;
+        background-color: #27509b;
         color: white;
         border: none;
         cursor: pointer;
 
         &:hover {
-            background-color: #c82333;
+            background-color: #0056b3;;
         }
+    }
+}
+
+.add-tyre-container, .view-stock-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+
+    h2 {
+        font-size: 1.8rem;
     }
 }

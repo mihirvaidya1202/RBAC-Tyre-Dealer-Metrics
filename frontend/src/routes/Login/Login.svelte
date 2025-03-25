@@ -1,5 +1,5 @@
 <script>
-  import { authApi } from '../lib/api.js';
+  import { authApi } from '../../lib/api';
   import { navigate } from 'svelte-routing';
 
   let username = '';
@@ -35,8 +35,6 @@
   {#if error}<p class="error">{error}</p>{/if}
 </form>
 
-<style>
-  .error {
-    color: red;
-  }
+<style lang="scss">
+  @use './_login.scss' as *;
 </style>

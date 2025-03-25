@@ -2,12 +2,24 @@
     import { onMount } from "svelte";
     import { navigate } from "svelte-routing";
     import { tyresApi } from "../../../lib/api";
+    import Navbar from '../../../components/Navbar/Navbar.svelte';
 
     let orders = [];
     let errorMessage = "";
     let isLoading = true;
 
     const starValues = [1, 2, 3, 4, 5];
+
+    const navbarItems = [
+        {
+            label: 'Dashboard',
+            url: '/customer/landing'
+        },
+        {
+            label: 'Purchase History',
+            url: '#'
+        },
+    ]
 
     async function fetchPurchaseHistory() {
         const token = localStorage.getItem('token');
@@ -100,6 +112,7 @@
     }
 </script>
 
+<Navbar {navbarItems} />
 <main>
     <h1>Order Details</h1>
 
@@ -235,7 +248,7 @@
 
     button {
         padding: 5px 10px;
-        background-color: #007bff;
+        background-color: #27509b;
         color: white;
         border: none;
         border-radius: 5px;
