@@ -1,26 +1,33 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { onMount, tick } from 'svelte';
 
     let isLoggedIn = false;
 
     export let navbarItems: Array<{ label: string; url: string }> = [];
-    export let landingPage: string = '#'
+    export let landingPage: string = '/login'
   
     onMount(() => {
       const token = localStorage.getItem('token');
+      console.log(token)
+
       isLoggedIn = !!token;
+      console.log(isLoggedIn)
     });
   
-    const handleLogout = () => {
-      localStorage.removeItem('authToken');
-      isLoggedIn = false;
-      window.location.href = '/login';
-    };
+    const handleLogout = async () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('token');
+    isLoggedIn = false;
+    
+    await tick();
+    
+    window.location.href = '/login';
+  };
   </script>
   
   <nav class="navbar">
     <div class="navbar-brand">
-      <a href={landingPage} class="navbar-logo">Your App</a>
+      <a href={landingPage} class="navbar-logo">Your App Logo</a>
     </div>
   
     <div class="navbar-links">
@@ -36,55 +43,6 @@
     </div>
   </nav>
   
-  <style>
-    /* Same styles as before */
-    .navbar {
-      font-size: 1.6rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      background-color: #27509b;
-      color: white;
-    }
-  
-    .navbar-brand {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-  
-    .navbar-logo {
-      color: white;
-      text-decoration: none;
-    }
-  
-    .navbar-links {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
-  
-    .navbar-link {
-      color: white;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-  
-    .navbar-link:hover {
-      opacity: 0.8;
-    }
-  
-    .navbar-button {
-      background: #f44336;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-  
-    .navbar-button:hover {
-      background-color: #d32f2f;
-    }
-  </style>
+<style lang="scss">
+  @use './_navbar.scss' as *;
+</style>

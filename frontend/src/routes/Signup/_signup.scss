@@ -1,15 +1,5 @@
-button {
-    color: #fff;
-    background-color: #27509b;
-}
-
-.login-page {
-    .logo-container {
-        display: flex;
-        font-size: 1.6rem;
-    }
-
-    .login-container {
+.signup-page {
+    .signup-container {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -35,11 +25,20 @@ button {
             }
         }
 
-        .button-list {
+        .logo-container {
             display: flex;
-            flex-direction: row;
-            justify-content: center;
-            gap: 1.6rem;
+            font-size: 1.6rem;
         }
+    }
+
+    .button-list {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        button {
+            color: #fff;
+            background-color: #27509b;
+        }        
     }
 }

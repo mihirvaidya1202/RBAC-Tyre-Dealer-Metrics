@@ -1,6 +1,8 @@
 <script>
   import { authApi } from '../../lib/api';
   import { navigate } from 'svelte-routing';
+  import { onMount } from 'svelte';
+  import Navbar from '../../components/Navbar/Navbar.svelte';
 
   let username = '';
   let password = '';
@@ -26,14 +28,45 @@
       error = err.message;
     }
   };
+
+  const handleSignup = () => {
+    navigate('/signup');
+  };
+
+  onMount(() => {
+    if (localStorage.getItem('token')) {
+      localStorage.removeItem('token');
+    }
+  })
 </script>
 
-<form on:submit|preventDefault={handleLogin}>
-  <input type="text" bind:value={username} placeholder="Username" required />
-  <input type="password" bind:value={password} placeholder="Password" required />
-  <button type="submit">Login</button>
-  {#if error}<p class="error">{error}</p>{/if}
-</form>
+<div class="login-page">
+  <Navbar />
+
+  <div class="login-container">
+    <span class="logo-container">
+      Your App logo
+    </span>
+  
+    <form on:submit|preventDefault={handleLogin}>
+      <div class="form-item">
+        <span>Username</span>
+        <input type="text" bind:value={username} placeholder="Username" required />
+      </div>
+
+      <div class="form-item">
+        <span div class="form-item">Password</span>
+        <input type="password" bind:value={password} placeholder="Password" required />
+      </div>
+  
+      <div class="button-list">
+        <button type="submit">Login</button>
+        <button type="button" on:click={handleSignup}>Sign Up</button>
+      </div>
+      {#if error}<p class="error">{error}</p>{/if}
+    </form>  
+  </div>
+</div>
 
 <style lang="scss">
   @use './_login.scss' as *;

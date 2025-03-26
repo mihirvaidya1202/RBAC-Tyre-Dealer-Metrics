@@ -1,7 +1,7 @@
 <script>
   import { Router, Route } from 'svelte-routing';
   import Login from './routes/Login/Login.svelte';
-  import Signup from './routes/Signup.svelte';
+  import Signup from './routes/Signup/Signup.svelte';
   import AdminLanding from './routes/Admin/Landing/Landing.svelte';
   import AdminAnalytics from './routes/Admin/Analytics/Analytics.svelte';
   import CustomerLanding from './routes/Customer/Landing/Landing.svelte';
