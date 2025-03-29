@@ -1,5 +1,10 @@
 const express = require('express');
-const { addTyreStock, fetchTyreStocks, buyTyreStock, deleteTyreStock } = require('../controllers/tyreStocksController');
+const { 
+  addTyreStock, 
+  fetchTyreStocks, 
+  buyTyreStock, 
+  deleteTyreStock 
+} = require('../controllers/tyreStocksController');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
@@ -10,6 +15,6 @@ router.get('/', auth(['admin', 'dealer']), fetchTyreStocks);
   
 router.post('/buy/:id', auth, buyTyreStock);
 
-router.delete('/:id', auth, deleteTyreStock);
+router.delete('/:id', auth(['admin']), deleteTyreStock);
 
 module.exports = router;

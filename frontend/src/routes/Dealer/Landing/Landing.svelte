@@ -106,81 +106,84 @@
     };
 </script>
 
-<Navbar {navbarItems} {landingPage} />
-<div class="landing-page page-content">
-    <h1>Dealer Dashboard</h1>
+<div class="landing-page">
+    <Navbar {navbarItems} {landingPage} />
 
-    {#if isLoading}
-        <p>Loading...</p>
-    {/if}
-    
-    <h2>Available Tyre Stocks from Admin</h2>
-    
-    {#if $tyreStocks.length === 0}
-        <p>No available stock from admin.</p>
-    {:else}
-        <table>
-            <thead>
-                <tr>
-                    <th>Tyre Model</th>
-                    <th>Tyre Size</th>
-                    <th>Available Quantity</th>
-                    <th>Price</th>
-                    <th>Quantity to Add</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {#each $tyreStocks as stock, index}
+    <div class="page-content">
+        <h1>Dealer Dashboard</h1>
+
+        {#if isLoading}
+            <p>Loading...</p>
+        {/if}
+        
+        <h2>Available Tyre Stocks from Admin</h2>
+        
+        {#if $tyreStocks.length === 0}
+            <p>No available stock from admin.</p>
+        {:else}
+            <table>
+                <thead>
                     <tr>
-                        <td>{stock.tyreModel}</td>
-                        <td>{stock.tyreSize}</td>
-                        <td>{stock.quantity}</td>
-                        <td>${stock.price}</td>
-                        <td>
-                            <input type="number" min="1" max={stock.quantity} bind:value={quantities[index]} />
-                        </td>
-                        <td>
-                            <button on:click={() => handleAddToDealerStock(stock, quantities[index])} disabled={isLoading}>
-                                Add to My Stock
-                            </button>
-                        </td>
+                        <th>Tyre Model</th>
+                        <th>Tyre Size</th>
+                        <th>Available Quantity</th>
+                        <th>Price</th>
+                        <th>Quantity to Add</th>
+                        <th>Action</th>
                     </tr>
-                {/each}
-            </tbody>
-        </table>
-    {/if}
-    
-    <h2>Your Tyre Stocks</h2>
-    
-    {#if error}
-        <p class="error">{error}</p>
-    {/if}
-    
-    {#if !$dealerStockStore || $dealerStockStore.length === 0}
-        <p>No tyre stocks available.</p>
-    {:else}
-        <table>
-            <thead>
-                <tr>
-                    <th>Tyre Model</th>
-                    <th>Tyre Size</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                {#each $dealerStockStore as stock}
+                </thead>
+                <tbody>
+                    {#each $tyreStocks as stock, index}
+                        <tr>
+                            <td>{stock.tyreModel}</td>
+                            <td>{stock.tyreSize}</td>
+                            <td>{stock.quantity}</td>
+                            <td>${stock.price}</td>
+                            <td>
+                                <input type="number" min="1" max={stock.quantity} bind:value={quantities[index]} />
+                            </td>
+                            <td>
+                                <button on:click={() => handleAddToDealerStock(stock, quantities[index])} disabled={isLoading}>
+                                    Add to My Stock
+                                </button>
+                            </td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        {/if}
+        
+        <h2>Your Tyre Stocks</h2>
+        
+        {#if error}
+            <p class="error">{error}</p>
+        {/if}
+        
+        {#if !$dealerStockStore || $dealerStockStore.length === 0}
+            <p>No tyre stocks available.</p>
+        {:else}
+            <table>
+                <thead>
                     <tr>
-                        <td>{stock.tyreModel}</td>
-                        <td>{stock.tyreSize}</td>
-                        <td>{stock.quantity}</td>
-                        <td>${stock.price}</td>
+                        <th>Tyre Model</th>
+                        <th>Tyre Size</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
                     </tr>
-                {/each}
-            </tbody>
-        </table>
-    {/if}
+                </thead>
+                <tbody>
+                    {#each $dealerStockStore as stock}
+                        <tr>
+                            <td>{stock.tyreModel}</td>
+                            <td>{stock.tyreSize}</td>
+                            <td>{stock.quantity}</td>
+                            <td>${stock.price}</td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        {/if}
+    </div>
 </div>
 
 <style lang="scss">

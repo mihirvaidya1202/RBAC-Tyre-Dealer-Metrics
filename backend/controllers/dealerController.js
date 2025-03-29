@@ -4,47 +4,6 @@ const TyreStock = require('../models/TyreStock');
 const Customer = require('../models/Customer');
 const { verifyToken } = require('../utils/jwt');
 
-exports.addToDealerStock = async (req, res) => {
-  try {
-    const { stockId, quantity } = req.body;
-    const dealerId = req.user._id;
-
-    const stock = await TyreStock.findById(stockId);
-    if (!stock || stock.quantity < quantity) {
-      console.error('Not enough stock available');
-      return res.status(400).json({ message: 'Not enough stock available' });
-    }
-
-    const dealer = await User.findById(dealerId);
-    if (!dealer) {
-      console.error('Dealer not found');
-      return res.status(404).json({ message: 'Dealer not found' });
-    }
-
-    const existingStock = dealer.dealerStock.find(item => item.tyreStockId.equals(stock._id));
-    if (existingStock) {
-      existingStock.quantity += quantity;
-    } else {
-      dealer.dealerStock.push({
-        tyreStockId: stock._id,
-        tyreModel: stock.tyreModel,
-        tyreSize: stock.tyreSize,
-        price: stock.price,
-        quantity: quantity,
-      });
-    }
-
-    stock.quantity -= quantity;
-    await stock.save();
-    await dealer.save();
-
-    res.status(200).json({ message: 'Stock added to dealer', remainingStock: stock.quantity });
-  } catch (error) {
-    console.error('Error in addToDealerStock:', error);
-    res.status(500).json({ message: 'Internal Server Error', error: error.message });
-  }
-};
-
 exports.getDealerStock = async (req, res) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
   try {

@@ -8,10 +8,8 @@
   
     onMount(() => {
       const token = localStorage.getItem('token');
-      console.log(token)
 
       isLoggedIn = !!token;
-      console.log(isLoggedIn)
     });
   
     const handleLogout = async () => {

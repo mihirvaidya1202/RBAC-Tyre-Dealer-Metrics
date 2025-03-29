@@ -143,7 +143,7 @@ exports.addTyreStock = async (req, res) => {
     }
 };
 
-  exports.fetchTyreStocks = async (req, res) => {
+exports.fetchTyreStocks = async (req, res) => {
     try {
       const tyreStocks = await TyreStock.find();
       res.status(200).json(tyreStocks);
@@ -151,9 +151,9 @@ exports.addTyreStock = async (req, res) => {
       console.error('Error fetching tyre stocks:', error);
       res.status(500).json({ message: 'Error fetching tyre stocks', error: error.message });
     }
-  };
+};
 
-  exports.deleteTyreStock = async (req, res) => {
+exports.deleteTyreStock = async (req, res) => {
     try {
         const { id } = req.params;
         const deletedStock = await TyreStock.findByIdAndDelete(id);
