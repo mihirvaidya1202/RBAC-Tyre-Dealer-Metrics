@@ -46,15 +46,7 @@ export const authApi = {
 };
 
 export const tyreStockApi = {
-  fetchTyreStocks: async (token) => {
-    try {
-      const response = await request('/tyre-stocks', 'GET', null, token);
-      return response;
-    } catch (error) {
-      console.error('Error fetching tyre stocks:', error);
-      throw new Error('Failed to fetch tyre stocks');
-    }
-  },
+  fetchTyreStocks: async (token) => request('/tyre-stocks', 'GET', null, token),
   addTyreStock: async (stock, token) => { return request('/tyre-stocks', 'POST', stock, token);},
   buyTyreStock: async (id, quantity, token) => request(`/tyre-stocks/buy/${id}`, 'POST', { quantity }, token),
   deleteTyreStock: async (id, token) => request(`/tyre-stocks/${id}`, 'DELETE', null, token),

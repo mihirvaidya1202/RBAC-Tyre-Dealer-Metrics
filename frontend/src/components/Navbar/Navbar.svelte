@@ -5,6 +5,8 @@
 
     export let navbarItems: Array<{ label: string; url: string }> = [];
     export let landingPage: string = '/login'
+    export let showLoginButton = true;
+
   
     onMount(() => {
       const token = localStorage.getItem('token');
@@ -33,10 +35,12 @@
         <a href={navbarItem.url} class="navbar-link">{navbarItem.label}</a>
       {/each}
   
-      {#if isLoggedIn}
-        <button on:click={handleLogout} class="navbar-button">Log Out</button>
-      {:else}
-        <a href="/login" class="navbar-link">Login</a>
+      {#if showLoginButton}
+        {#if isLoggedIn }
+          <button on:click={handleLogout} class="navbar-button">Log Out</button>
+        {:else}
+          <a href="/login" class="navbar-link">Login</a>
+        {/if}
       {/if}
     </div>
   </nav>

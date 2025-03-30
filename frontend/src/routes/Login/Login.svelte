@@ -8,6 +8,8 @@
   let password = '';
   let error = '';
 
+  const showLoginButton = false;
+
   const handleLogin = async () => {
     try {
       const credentials = { username, password };
@@ -41,7 +43,7 @@
 </script>
 
 <div class="login-page">
-  <Navbar />
+  <Navbar {showLoginButton} />
 
   <div class="login-container">
     <span class="logo-container">
