@@ -50,7 +50,6 @@ export const tyreStockApi = {
   addTyreStock: async (stock, token) => { return request('/tyre-stocks', 'POST', stock, token);},
   buyTyreStock: async (id, quantity, token) => request(`/tyre-stocks/buy/${id}`, 'POST', { quantity }, token),
   deleteTyreStock: async (id, token) => request(`/tyre-stocks/${id}`, 'DELETE', null, token),
-  removeFromDealerStock: async (id, token) => request(`/dealer-stock/${id}`, 'DELETE', null, token),
   getDealerStock: async (token) => request('/dealer/stock', 'GET', null, token),
   addToDealerStock: async (stockId, quantity, token) => { return request('/dealer/stock/add', 'POST', { stockId, quantity }, token);},
 };

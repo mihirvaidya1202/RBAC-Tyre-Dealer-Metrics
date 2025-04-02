@@ -6,7 +6,7 @@
     .tables-container {
         display: flex;
         flex-direction: column;
-        gap: 3.2rem;
+        gap: 4.8rem;
 
         &-section {
             display: flex;
@@ -19,8 +19,8 @@
             }
             
             th, td {
-                border: 1px solid #ddd;
-                padding: 8px;
+                border: 0.1rem solid #ddd;
+                padding: 0.8rem;
                 text-align: left;
             }
             
@@ -29,28 +29,29 @@
             }
     
             button {
-                padding: 5px 10px;
+                padding: 0.8rem 1.6rem;
                 cursor: pointer;
-            }    
+            }
         }
     }
-    
-    .chartContainer {
-        max-width: 800px;
-        margin: auto;
-        padding: 20px;
-        background: #fff;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-    
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-    
-        canvas {
-            width: 100% !important;
-            height: 400px !important;
+
+    .chart-section {
+        display: flex;
+        flex-direction: column;
+        gap: 2.4rem;
+        align-items: center;
+
+        .tyreChartContainer, .dealerChartContainer {
+            margin: auto;
+            padding: 1.6rem;
+            background: #fff;
+            box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
+            border-radius: 0.8rem;
+        
+            h1 {
+                text-align: center;
+                color: #333;
+            }
         }
     }
 }

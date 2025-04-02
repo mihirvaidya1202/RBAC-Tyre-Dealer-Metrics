@@ -32,14 +32,6 @@ export async function addToDealerStock(stock, quantity, token) {
       throw new Error("Failed to add stock.");
   }
 }
-export function removeFromDealerStock(id) {
-  dealerStockStore.update((stocks) => {
-    const updatedStocks = stocks.filter((stock) => stock._id !== id);
-    return updatedStocks;
-  });
-
-  saveDealerStockToLocalStorage();
-}
 
 function saveDealerStockToLocalStorage() {
   dealerStockStore.subscribe((stocks) => {

@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import { navigate } from 'svelte-routing';
-    import { dealerStockStore, removeFromDealerStock, tyreStocks, addToDealerStock } from '../../../lib/stores';
+    import { dealerStockStore, tyreStocks } from '../../../lib/stores';
     import { tyreStockApi } from '../../../lib/api';
     import Navbar from '../../../components/Navbar/Navbar.svelte';
 
@@ -78,113 +78,87 @@
             isLoading = false;
         }
     };
-
-    const handleRemove = async (id) => {
-        if (!id) {
-            error = "Invalid stock ID.";
-            return;
-        }
-
-        const token = localStorage.getItem('token');
-        if (!token) {
-            error = 'You must be logged in to remove stock.';
-            navigate('/login');
-            return;
-        }
-
-        try {
-            isLoading = true;
-            await tyreStockApi.removeFromDealerStock(id, token);
-            removeFromDealerStock(id);
-            error = null;
-        } catch (err) {
-            console.error("Error in handleRemove:", err);
-            error = err.message || 'Failed to remove stock. Please try again.';
-        } finally {
-            isLoading = false;
-        }
-    };
 </script>
 
-<div class="landing-page">
-    <Navbar {navbarItems} {landingPage} />
+{#if error}
+    <p class="error">{error}</p>
+{:else}
+    <div class="landing-page">
+        <Navbar {navbarItems} {landingPage} />
 
-    <div class="page-content">
-        <h1>Dealer Dashboard</h1>
+        <div class="page-content">
+            <h1>Dealer Dashboard</h1>
 
-        {#if isLoading}
-            <p>Loading...</p>
-        {/if}
-        
-        <h2>Available Tyre Stocks from Admin</h2>
-        
-        {#if $tyreStocks.length === 0}
-            <p>No available stock from admin.</p>
-        {:else}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tyre Model</th>
-                        <th>Tyre Size</th>
-                        <th>Available Quantity</th>
-                        <th>Price</th>
-                        <th>Quantity to Add</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each $tyreStocks as stock, index}
+            {#if isLoading}
+                <p>Loading...</p>
+            {/if}
+            
+            <h2>Available Tyre Stocks from Admin</h2>
+            
+            {#if $tyreStocks.length === 0}
+                <p>No available stock from admin.</p>
+            {:else}
+                <table>
+                    <thead>
                         <tr>
-                            <td>{stock.tyreModel}</td>
-                            <td>{stock.tyreSize}</td>
-                            <td>{stock.quantity}</td>
-                            <td>${stock.price}</td>
-                            <td>
-                                <input type="number" min="1" max={stock.quantity} bind:value={quantities[index]} />
-                            </td>
-                            <td>
-                                <button on:click={() => handleAddToDealerStock(stock, quantities[index])} disabled={isLoading}>
-                                    Add to My Stock
-                                </button>
-                            </td>
+                            <th>Tyre Model</th>
+                            <th>Tyre Size</th>
+                            <th>Available Quantity</th>
+                            <th>Price</th>
+                            <th>Quantity to Add</th>
+                            <th>Action</th>
                         </tr>
-                    {/each}
-                </tbody>
-            </table>
-        {/if}
-        
-        <h2>Your Tyre Stocks</h2>
-        
-        {#if error}
-            <p class="error">{error}</p>
-        {/if}
-        
-        {#if !$dealerStockStore || $dealerStockStore.length === 0}
-            <p>No tyre stocks available.</p>
-        {:else}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tyre Model</th>
-                        <th>Tyre Size</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each $dealerStockStore as stock}
+                    </thead>
+                    <tbody>
+                        {#each $tyreStocks as stock, index}
+                            <tr>
+                                <td>{stock.tyreModel}</td>
+                                <td>{stock.tyreSize}</td>
+                                <td>{stock.quantity}</td>
+                                <td>${stock.price}</td>
+                                <td>
+                                    <input type="number" min="1" max={stock.quantity} bind:value={quantities[index]} />
+                                </td>
+                                <td>
+                                    <button on:click={() => handleAddToDealerStock(stock, quantities[index])} disabled={isLoading}>
+                                        Add to My Stock
+                                    </button>
+                                </td>
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            {/if}
+            
+            <h2>Your Tyre Stocks</h2>
+            
+            {#if !$dealerStockStore || $dealerStockStore.length === 0}
+                <p>No tyre stocks available.</p>
+            {:else}
+                <table>
+                    <thead>
                         <tr>
-                            <td>{stock.tyreModel}</td>
-                            <td>{stock.tyreSize}</td>
-                            <td>{stock.quantity}</td>
-                            <td>${stock.price}</td>
+                            <th>Tyre Model</th>
+                            <th>Tyre Size</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
                         </tr>
-                    {/each}
-                </tbody>
-            </table>
-        {/if}
+                    </thead>
+                    <tbody>
+                        {#each $dealerStockStore as stock}
+                            <tr>
+                                <td>{stock.tyreModel}</td>
+                                <td>{stock.tyreSize}</td>
+                                <td>{stock.quantity}</td>
+                                <td>${stock.price}</td>
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            {/if}
+        </div>
     </div>
-</div>
+{/if}
 
 <style lang="scss">
     @use './_landing.scss' as *;

@@ -72,7 +72,7 @@
 </script>
 
 <Navbar {navbarItems} {landingPage} />
-<main>
+<div class="tyre-details page-content">
     {#if errorMessage}
         <p>{errorMessage}</p>
     {:else if !tyre}
@@ -91,20 +91,23 @@
                             <p>Quantity Available: {dealer.quantity}</p>
                             <!-- we will change this if we decide to add different selling price for each dealer -->
                             <p>Price: ${tyre.price}</p> 
-                            <label for={`quantity-${dealer.dealerId}`}>Quantity:</label>
-                            <input
-                                type="number"
-                                id={`quantity-${dealer.dealerId}`}
-                                bind:value={quantities[dealer.dealerId]}
-                                min="1"
-                                max={dealer.quantity}
-                            />
-                            <button
-                                on:click={() => handleBuy(dealer.dealerId, tyre._id)}
-                                disabled={quantities[dealer.dealerId] > dealer.quantity || quantities[dealer.dealerId] <= 0}
-                            >
-                                Buy
-                            </button>
+
+                            <div class="purchase-container">
+                                <label for={`quantity-${dealer.dealerId}`}>Quantity:</label>
+                                <input
+                                    type="number"
+                                    id={`quantity-${dealer.dealerId}`}
+                                    bind:value={quantities[dealer.dealerId]}
+                                    min="1"
+                                    max={dealer.quantity}
+                                />
+                                <button
+                                    on:click={() => handleBuy(dealer.dealerId, tyre._id)}
+                                    disabled={quantities[dealer.dealerId] > dealer.quantity || quantities[dealer.dealerId] <= 0}
+                                >
+                                    Buy
+                                </button>
+                            </div>
                         </li>
                     {/if}
                 {/each}
@@ -113,58 +116,8 @@
             <p>No dealers have this tyre in stock.</p>
         {/if}
     {/if}
-</main>
+</div>
 
-<style>
-    main {
-        padding: 20px;
-        font-family: Arial, sans-serif;
-    }
-
-    h1 {
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-
-    h2 {
-        font-size: 20px;
-        margin-top: 20px;
-        margin-bottom: 10px;
-    }
-
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    li {
-        border: 1px solid #ddd;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-    }
-
-    label {
-        margin-right: 10px;
-    }
-
-    input {
-        width: 60px;
-        padding: 5px;
-        margin-right: 10px;
-    }
-
-    button {
-        background-color: #27509b;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-
-    button:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
+<style lang="scss">
+    @use './_tyreDetails.scss' as *;
 </style>

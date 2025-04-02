@@ -121,29 +121,29 @@
 
 <style>
     main {
-        padding: 20px;
+        padding: 1.6rem;
         font-family: Arial, sans-serif;
     }
 
     h1 {
-        font-size: 24px;
-        margin-bottom: 10px;
+        font-size: 2.4rem;
+        margin-bottom: 0.8rem;
     }
 
     .dealer-info {
         background: #f9f9f9;
-        padding: 15px;
-        border-radius: 8px;
-        margin-top: 20px;
+        padding: 1.6rem;
+        border-radius: 0.8rem;
+        margin-top: 1.6rem;
     }
 
     h2 {
-        font-size: 20px;
-        margin-bottom: 10px;
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
     }
 
     .tyre-sales {
-        margin-top: 20px;
+        margin-top: 1.6rem;
     }
 
     canvas {

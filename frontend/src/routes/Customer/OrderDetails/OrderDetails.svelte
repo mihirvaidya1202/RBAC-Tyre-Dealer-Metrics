@@ -115,7 +115,7 @@
 </script>
 
 <Navbar {navbarItems} {landingPage} />
-<main>
+<div class="order-details page-content">
     <h1>Order Details</h1>
 
     {#if isLoading}
@@ -194,76 +194,8 @@
             {/each}
         </ul>
     {/if}
-</main>
+</div>
 
-<style>
-    main {
-        padding: 20px;
-        font-family: Arial, sans-serif;
-    }
-
-    h1 {
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
-
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    li {
-        border: 1px solid #ddd;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-    }
-
-    h2 {
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
-
-    p {
-        margin: 5px 0;
-    }
-
-    .rating-container {
-        margin-top: 10px;
-    }
-
-    .stars {
-        display: flex;
-        gap: 2px;
-    }
-
-    .star {
-        cursor: pointer;
-        font-size: 24px;
-        color: #ccc;
-        transition: color 0.2s;
-    }
-
-    .star.active {
-        color: #ffcc00;
-    }
-
-    button {
-        padding: 5px 10px;
-        background-color: #27509b;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-
-    button:hover {
-        background-color: #0056b3;
-    }
-
-    button:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
+<style lang="scss">
+    @use './_orderDetails.scss' as *;
 </style>

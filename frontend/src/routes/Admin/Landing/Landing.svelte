@@ -3,6 +3,7 @@
   import { tyreStocks, loadTyreStocks } from '../../../lib/stores';
   import { tyreStockApi } from '../../../lib/api';
   import Navbar from '../../../components/Navbar/Navbar.svelte';
+  import ErrorTemplate from '../../../components/Templates/ErrorTemplate/ErrorTemplate.svelte';
 
   let tyreModel = '';
   let tyreSize = 0;
@@ -80,76 +81,76 @@
   };
 </script>
 
-<div class="landing-page">
-  <Navbar {navbarItems} {landingPage} />
+{#if error}
+  <ErrorTemplate {error} />
+{:else}
+  <div class="landing-page">
+    <Navbar {navbarItems} {landingPage} />
 
-  <div class="page-content">
-    <h1 class="page-title">Admin Dashboard - Tyre Stock Management</h1>
+    <div class="page-content">
+      <h1 class="page-title">Admin Dashboard - Tyre Stock Management</h1>
 
-    {#if error}
-      <p class="error">{error}</p>
-    {/if}
-  
-    <div class="add-tyre-container">
-      <h2>Add Tyre Stocks</h2>
-      <form on:submit|preventDefault={handleAddStock}>
-        <div class="input-field">
-          <span>Tyre Model</span>
-          <input type="text" bind:value={tyreModel} placeholder="Tyre Model" required />
-        </div>
-        <div class="input-field">
-          <span>Tyre Size</span>
-          <select bind:value={tyreSize} required>
-              <option value="" disabled selected>Select Tyre Size</option>
-              <option value="13">13</option>
-              <option value="15">15</option>
-              <option value="17">17</option>
-          </select>
-        </div>
-        <div class="input-field">
-          <span>Tyre Quantity</span>
-          <input type="number" bind:value={quantity} placeholder="Quantity" required />
-        </div>
-        <div class="input-field">
-          <span>Price</span>
-          <input type="number" bind:value={price} placeholder="Price" required />
-        </div>
-  
-        <button type="submit">Add Stock</button>
-      </form>
-    </div>
-  
-    <div class="view-stock-container">
-      {#if $tyreStocks.length}
-        <h2>Current Tyre Stocks</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Tyre Model</th>
-              <th>Tyre Size</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each $tyreStocks as stock}
+      <div class="add-tyre-container">
+        <h2>Add Tyre Stocks</h2>
+        <form on:submit|preventDefault={handleAddStock}>
+          <div class="input-field">
+            <span>Tyre Model</span>
+            <input type="text" bind:value={tyreModel} placeholder="Tyre Model" required />
+          </div>
+          <div class="input-field">
+            <span>Tyre Size</span>
+            <select bind:value={tyreSize} required>
+                <option value="" disabled selected>Select Tyre Size</option>
+                <option value="13">13</option>
+                <option value="15">15</option>
+                <option value="17">17</option>
+            </select>
+          </div>
+          <div class="input-field">
+            <span>Tyre Quantity</span>
+            <input type="number" bind:value={quantity} placeholder="Quantity" required />
+          </div>
+          <div class="input-field">
+            <span>Price</span>
+            <input type="number" bind:value={price} placeholder="Price" required />
+          </div>
+    
+          <button type="submit">Add Stock</button>
+        </form>
+      </div>
+    
+      <div class="view-stock-container">
+        {#if $tyreStocks.length}
+          <h2>Current Tyre Stocks</h2>
+          <table>
+            <thead>
               <tr>
-                <td>{stock.tyreModel}</td>
-                <td>{stock.tyreSize}</td>
-                <td>{stock.quantity}</td>
-                <td>${stock.price}</td>
-                <td>
-                  <button on:click={() => handleDeleteStock(stock._id)}>Delete</button>
-                </td>
+                <th>Tyre Model</th>
+                <th>Tyre Size</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Actions</th>
               </tr>
-            {/each}
-          </tbody>
-        </table>
-      {/if}
+            </thead>
+            <tbody>
+              {#each $tyreStocks as stock}
+                <tr>
+                  <td>{stock.tyreModel}</td>
+                  <td>{stock.tyreSize}</td>
+                  <td>{stock.quantity}</td>
+                  <td>${stock.price}</td>
+                  <td>
+                    <button on:click={() => handleDeleteStock(stock._id)}>Delete</button>
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        {/if}
+      </div>
     </div>
   </div>
-</div>
+{/if}
 
 <style lang="scss">
   @use './_landing.scss' as *;

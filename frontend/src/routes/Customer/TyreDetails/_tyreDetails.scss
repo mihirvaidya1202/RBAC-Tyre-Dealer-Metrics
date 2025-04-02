@@ -1,0 +1,54 @@
+.tyre-details.page-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    font-size: 1.6rem;
+    
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: 1.6rem;
+        padding: unset;
+        margin: unset;
+        list-style-type: none;
+    }
+
+    li {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        border: 0.1rem solid #ddd;
+        padding: 1.6rem;
+        border-radius: 0.8rem;
+
+        p {
+            margin: unset;
+        }
+
+        .purchase-container {
+            display: flex;
+            flex-direction: row;
+            gap: 1.6rem;
+            align-items: center;
+
+            input {
+                width: 4rem;
+                padding: 0.8rem;
+            }
+        
+            button {
+                background-color: #27509b;
+                color: white;
+                border: none;
+                padding: 0.8rem 1.6rem;
+                border-radius: 0.8rem;
+                cursor: pointer;
+            }
+        
+            button:disabled {
+                background-color: #ccc;
+                cursor: not-allowed;
+            }
+        }
+    }
+}
