@@ -27,30 +27,46 @@ form {
     }
 }
 
-table {
-    font-size: 1.6rem;
-    width: 100%;
-    border-collapse: collapse;
-
-    th, td {
-        padding: 0.8rem;
-        border: 0.1rem solid #ddd;
-        text-align: left;
-    }
-
-    th {
-        background-color: #f4f4f4;
-    }
-
-    button {
-        padding: 0.8rem 1.6rem;
-        background-color: #27509b;
-        color: white;
-        border: none;
-        cursor: pointer;
-
-        &:hover {
-            background-color: #0056b3;
+.view-stock-container {
+    table {
+        font-size: 1.6rem;
+        width: 100%;
+        border-collapse: collapse;
+    
+        th, td {
+            padding: 0.8rem;
+            border: 0.1rem solid #ddd;
+            text-align: left;
+        }
+    
+        .td-add-input {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+    
+            input {
+                width: 7rem;
+            }
+    
+            @media only screen and (min-width: 600px) {
+                flex-direction: row; 
+            }
+        }
+    
+        th {
+            background-color: #f4f4f4;
+        }
+    
+        button {
+            padding: 0.8rem 1.6rem;
+            background-color: #27509b;
+            color: white;
+            border: none;
+            cursor: pointer;
+    
+            &:hover {
+                background-color: #0056b3;
+            }
         }
     }
 }

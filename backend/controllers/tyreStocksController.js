@@ -165,3 +165,31 @@ exports.deleteTyreStock = async (req, res) => {
         res.status(500).json({ message: 'Error deleting tyre stock', error: error.message });
     }
 };
+
+exports.updateTyreStock = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { additionalQty, newPrice } = req.body;
+  
+      const stock = await TyreStock.findById(id);
+      if (!stock) {
+        return res.status(404).json({ message: 'Tyre stock not found' });
+      }
+  
+      if (typeof additionalQty === 'number' && additionalQty > 0) {
+        stock.quantity += additionalQty;
+      }
+  
+      if (typeof newPrice === 'number' && newPrice > 0) {
+        stock.price = newPrice;
+      }
+  
+      await stock.save();
+  
+      res.status(200).json({ message: 'Stock updated successfully', updatedStock: stock });
+    } catch (error) {
+      console.error('Error updating tyre stock:', error);
+      res.status(500).json({ message: 'Error updating tyre stock', error: error.message });
+    }
+  };
+  

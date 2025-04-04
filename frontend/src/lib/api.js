@@ -52,6 +52,7 @@ export const tyreStockApi = {
   deleteTyreStock: async (id, token) => request(`/tyre-stocks/${id}`, 'DELETE', null, token),
   getDealerStock: async (token) => request('/dealer/stock', 'GET', null, token),
   addToDealerStock: async (stockId, quantity, token) => { return request('/dealer/stock/add', 'POST', { stockId, quantity }, token);},
+  updateTyreStock: async (id, data, token) =>request(`/tyre-stocks/${id}`, 'PATCH', data, token)
 };
 
 export const analyticsApi = {

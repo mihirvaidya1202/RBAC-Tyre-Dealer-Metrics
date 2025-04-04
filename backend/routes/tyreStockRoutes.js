@@ -3,7 +3,8 @@ const {
   addTyreStock, 
   fetchTyreStocks, 
   buyTyreStock, 
-  deleteTyreStock 
+  deleteTyreStock,
+  updateTyreStock
 } = require('../controllers/tyreStocksController');
 const auth = require('../middleware/auth');
 
@@ -16,5 +17,7 @@ router.get('/', auth(['admin', 'dealer']), fetchTyreStocks);
 router.post('/buy/:id', auth, buyTyreStock);
 
 router.delete('/:id', auth(['admin']), deleteTyreStock);
+
+router.patch('/:id', auth(['admin']), updateTyreStock);
 
 module.exports = router;
