@@ -40,8 +40,16 @@ html {
             cursor: pointer;
         }
 
-        h1, h2 {
+        p, h1, h2 {
             margin: unset;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+        }
+
+        h2 {
+            font-size: 2rem;
         }
 
         .page-content {

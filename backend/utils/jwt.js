@@ -13,28 +13,54 @@ const verifyToken = (token) => {
   try {
     return jwt.verify(token, secret);
   } catch (error) {
+    console.error('Token verification failed:', error.message);
     throw new Error('Invalid or expired token');
   }
 };
 
 const authMiddleware = (allowedRoles) => (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
+  
   if (!token) {
-    return res.status(401).json({ message: 'No token, authorization denied' });
+    return res.status(401).json({ 
+      success: false,
+      message: 'Authentication required. No token found.',
+      code: 'UNAUTHORIZED'
+    });
   }
 
   try {
     const decoded = verifyToken(token);
 
-    if (!allowedRoles.includes(decoded.role)) {
-      return res.status(403).json({ message: 'Access denied' });
+    if (allowedRoles && !allowedRoles.includes(decoded.role)) {
+      return res.status(403).json({ 
+        success: false,
+        message: 'Forbidden - Insufficient permissions',
+        code: 'FORBIDDEN'
+      });
+    }
+
+    if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+      return res.status(401).json({
+        success: false,
+        message: 'Token expired',
+        code: 'TOKEN_EXPIRED'
+      });
     }
 
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(401).json({ message: error.message });
+    res.status(401).json({ 
+      success: false,
+      message: error.message,
+      code: 'INVALID_TOKEN'
+    });
   }
 };
 
-module.exports = { generateToken, verifyToken, authMiddleware };
+module.exports = { 
+  generateToken, 
+  verifyToken, 
+  authMiddleware 
+};

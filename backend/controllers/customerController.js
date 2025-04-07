@@ -6,6 +6,14 @@ const { updateAverageRating, updateAllAverageRatings } = require('../utils/ratin
 
 exports.getAllTyres = async (req, res) => {
     try {
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        if (!token) {
+            return res.status(401).json({ 
+                message: 'Authentication required',
+                code: 'UNAUTHORIZED'
+            });
+        }
+
         const dealers = await Dealer.find().populate({
             path: 'dealerStock.tyreStockId',
             model: 'TyreStock',
@@ -28,18 +36,33 @@ exports.getAllTyres = async (req, res) => {
         res.status(200).json(availableTyres);
     } catch (err) {
         console.error("Error fetching tyres:", err);
-        res.status(500).json({ message: "Failed to fetch tyres", error: err.message });
+        res.status(500).json({ 
+            message: "Failed to fetch tyres", 
+            error: err.message,
+            code: 'SERVER_ERROR'
+        });
     }
 };
 
 exports.getTyreDetails = async (req, res) => {
     try {
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        if (!token) {
+            return res.status(401).json({ 
+                message: 'Authentication required',
+                code: 'UNAUTHORIZED'
+            });
+        }
+
         const { tyreModel, tyreSize } = req.params;
 
         const tyre = await TyreStock.findOne({ tyreModel, tyreSize });
 
         if (!tyre) {
-            return res.status(404).json({ message: "Tyre not found" });
+            return res.status(404).json({ 
+                message: "Tyre not found",
+                code: 'NOT_FOUND'
+            });
         }
 
         const dealers = await Dealer.find({ "dealerStock.tyreStockId": tyre._id }).populate({
@@ -71,19 +94,34 @@ exports.getTyreDetails = async (req, res) => {
         });
     } catch (err) {
         console.error("Error fetching tyre details:", err);
-        res.status(500).json({ message: "Failed to fetch tyre details", error: err.message });
+        res.status(500).json({ 
+            message: "Failed to fetch tyre details", 
+            error: err.message,
+            code: 'SERVER_ERROR'
+        });
     }
 };
 
 exports.buyTyre = async (req, res) => {
     try {
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        if (!token) {
+            return res.status(401).json({ 
+                message: 'Authentication required',
+                code: 'UNAUTHORIZED'
+            });
+        }
+
         const { dealerId, tyreId, quantity } = req.body;
 
         const userId = req.user._id;
 
         const dealer = await Dealer.findById(dealerId);
         if (!dealer) {
-            return res.status(404).json({ message: "Dealer not found" });
+            return res.status(404).json({ 
+                message: "Dealer not found",
+                code: 'NOT_FOUND'
+            });
         }
 
         const stockItem = dealer.dealerStock.find(
@@ -91,11 +129,17 @@ exports.buyTyre = async (req, res) => {
         );
 
         if (!stockItem) {
-            return res.status(404).json({ message: "Tyre not found in dealer stock" });
+            return res.status(404).json({ 
+                message: "Tyre not found in dealer stock",
+                code: 'NOT_FOUND'
+            });
         }
 
         if (stockItem.quantity < quantity) {
-            return res.status(400).json({ message: "Insufficient stock" });
+            return res.status(400).json({ 
+                message: "Insufficient stock",
+                code: 'INSUFFICIENT_STOCK'
+            });
         }
 
         stockItem.quantity -= quantity;
@@ -103,7 +147,10 @@ exports.buyTyre = async (req, res) => {
 
         const customer = await Customer.findById(userId);
         if (!customer) {
-            return res.status(404).json({ message: "Customer not found" });
+            return res.status(404).json({ 
+                message: "Customer not found",
+                code: 'NOT_FOUND'
+            });
         }
 
         customer.orderHistory.push({
@@ -114,10 +161,17 @@ exports.buyTyre = async (req, res) => {
         });
         await customer.save();
 
-        res.status(200).json({ message: "Tyre purchased successfully", customer });
+        res.status(200).json({ 
+            message: "Tyre purchased successfully", 
+            customer 
+        });
     } catch (err) {
         console.error("Error purchasing tyre:", err);
-        res.status(500).json({ message: "Failed to purchase tyre", error: err.message });
+        res.status(500).json({ 
+            message: "Failed to purchase tyre", 
+            error: err.message,
+            code: 'SERVER_ERROR'
+        });
     }
 };
 
@@ -125,6 +179,13 @@ exports.getPurchaseHistory = async (req, res) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
     try {
+        if (!token) {
+            return res.status(401).json({ 
+                message: 'Authentication required',
+                code: 'UNAUTHORIZED'
+            });
+        }
+
         const decoded = verifyToken(token);
         const userId = decoded.id;
 
@@ -133,7 +194,10 @@ exports.getPurchaseHistory = async (req, res) => {
             .populate('orderHistory.dealerId');
 
         if (!customer) {
-            return res.status(404).json({ message: "Customer not found" });
+            return res.status(404).json({ 
+                message: "Customer not found",
+                code: 'NOT_FOUND'
+            });
         }
 
         const sortedOrderHistory = customer.orderHistory.sort(
@@ -143,24 +207,41 @@ exports.getPurchaseHistory = async (req, res) => {
         res.status(200).json(sortedOrderHistory);
     } catch (err) {
         console.error("Error fetching purchase history:", err);
-        res.status(500).json({ message: "Failed to fetch purchase history", error: err.message });
+        res.status(500).json({ 
+            message: "Failed to fetch purchase history", 
+            error: err.message,
+            code: 'SERVER_ERROR'
+        });
     }
 };
 
 exports.updateDealerRating = async (req, res) => {
     const { orderId, dealerRating } = req.body;
-
     const userId = req.user._id;
 
     try {
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        if (!token) {
+            return res.status(401).json({ 
+                message: 'Authentication required',
+                code: 'UNAUTHORIZED'
+            });
+        }
+
         const customer = await Customer.findById(userId);
         if (!customer) {
-            return res.status(404).json({ message: "Customer not found" });
+            return res.status(404).json({ 
+                message: "Customer not found",
+                code: 'NOT_FOUND'
+            });
         }
 
         const order = customer.orderHistory.id(orderId);
         if (!order) {
-            return res.status(404).json({ message: "Order not found" });
+            return res.status(404).json({ 
+                message: "Order not found",
+                code: 'NOT_FOUND'
+            });
         }
 
         order.orderDealerRating = dealerRating;
@@ -168,27 +249,47 @@ exports.updateDealerRating = async (req, res) => {
 
         await updateAverageRating(order.dealerId, 'dealer');
 
-        res.status(200).json({ message: "Dealer rating updated successfully", order });
+        res.status(200).json({ 
+            message: "Dealer rating updated successfully", 
+            order 
+        });
     } catch (err) {
         console.error("Error updating dealer rating:", err);
-        res.status(500).json({ message: "Failed to update dealer rating", error: err.message });
+        res.status(500).json({ 
+            message: "Failed to update dealer rating", 
+            error: err.message,
+            code: 'SERVER_ERROR'
+        });
     }
 };
 
 exports.updateTyreRating = async (req, res) => {
     const { orderId, tyreRating } = req.body;
-
     const userId = req.user._id;
 
     try {
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        if (!token) {
+            return res.status(401).json({ 
+                message: 'Authentication required',
+                code: 'UNAUTHORIZED'
+            });
+        }
+
         const customer = await Customer.findById(userId);
         if (!customer) {
-            return res.status(404).json({ message: "Customer not found" });
+            return res.status(404).json({ 
+                message: "Customer not found",
+                code: 'NOT_FOUND'
+            });
         }
 
         const order = customer.orderHistory.id(orderId);
         if (!order) {
-            return res.status(404).json({ message: "Order not found" });
+            return res.status(404).json({ 
+                message: "Order not found",
+                code: 'NOT_FOUND'
+            });
         }
 
         order.orderTyreRating = tyreRating;
@@ -196,9 +297,16 @@ exports.updateTyreRating = async (req, res) => {
 
         await updateAverageRating(order.tyreId, 'TyreStock');
 
-        res.status(200).json({ message: "Tyre rating updated successfully", order });
+        res.status(200).json({ 
+            message: "Tyre rating updated successfully", 
+            order 
+        });
     } catch (err) {
         console.error("Error updating tyre rating:", err);
-        res.status(500).json({ message: "Failed to update tyre rating", error: err.message });
+        res.status(500).json({ 
+            message: "Failed to update tyre rating", 
+            error: err.message,
+            code: 'SERVER_ERROR'
+        });
     }
 };

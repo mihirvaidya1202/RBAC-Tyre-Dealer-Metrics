@@ -4,8 +4,9 @@
     import { dealerStockStore, tyreStocks } from '../../../lib/stores';
     import { tyreStockApi } from '../../../lib/api';
     import Navbar from '../../../components/Navbar/Navbar.svelte';
+    import ErrorTemplate from '../../../components/Templates/ErrorTemplate/ErrorTemplate.svelte';
 
-    let error = null;
+    let error = { message: null, code: null };
     let isLoading = false;
     let dealerId = null;
     let quantities = [];
@@ -15,33 +16,60 @@
             label: 'Analytics',
             url: '/dealer/analytics'
         }
-    ]
+    ];
 
-    const landingPage = '/dealer/landing'
+    const landingPage = '/dealer/landing';
+
+    const handleApiError = (err) => {
+        if (err.response) {
+            error = {
+                message: err.response.message || 'API request failed',
+                code: err.response.code || 'API_ERROR'
+            };
+            
+            if (err.response.status === 403) {
+                error.message = 'Access denied. Please login again.';
+                localStorage.removeItem('token');
+                navigate('/login');
+            }
+        } else {
+            error = {
+                message: err.message || 'An unexpected error occurred',
+                code: 'NETWORK_ERROR'
+            };
+        }
+        console.error('API Error:', err);
+    };
 
     onMount(async () => {
         const token = localStorage.getItem('token');
         if (!token) {
+            error = {
+                message: 'You must be logged in to access this page',
+                code: 'UNAUTHORIZED'
+            };
             navigate('/login');
             return;
         }
 
         try {
+            isLoading = true;
+            error = { message: null, code: null };
+            
             const decodedToken = JSON.parse(atob(token.split('.')[1]));
             dealerId = decodedToken.id;
 
-            isLoading = true;
-            const adminStock = await tyreStockApi.fetchTyreStocks(token);
+            const [adminStock, dealerStock] = await Promise.all([
+                tyreStockApi.fetchTyreStocks(token),
+                tyreStockApi.getDealerStock(token)
+            ]);
+
             tyreStocks.set(adminStock);
             quantities = new Array(adminStock.length).fill(1);
-
-            const dealerStock = await tyreStockApi.getDealerStock(token);
             dealerStockStore.set(dealerStock);
 
-            error = null;
         } catch (err) {
-            console.error("Error fetching stock:", err);
-            error = err.message || "Failed to load stock.";
+            handleApiError(err);
         } finally {
             isLoading = false;
         }
@@ -49,116 +77,137 @@
 
     const handleAddToDealerStock = async (stock, quantity) => {
         if (!quantity || quantity < 1 || quantity > stock.quantity) {
-            error = "Invalid quantity selected.";
+            error = {
+                message: "Invalid quantity selected. Must be between 1 and available quantity.",
+                code: 'VALIDATION_ERROR'
+            };
             return;
         }
 
         const token = localStorage.getItem('token');
         if (!token) {
-            error = 'You must be logged in to add stock.';
+            error = {
+                message: 'You must be logged in to add stock',
+                code: 'UNAUTHORIZED'
+            };
             navigate('/login');
             return;
         }
 
         try {
             isLoading = true;
+            error = { message: null, code: null };
+            
             await tyreStockApi.addToDealerStock(stock._id, quantity, token);
 
-            const updatedDealerStock = await tyreStockApi.getDealerStock(token);
-            dealerStockStore.set(updatedDealerStock);
+            const [updatedDealerStock, updatedAdminStock] = await Promise.all([
+                tyreStockApi.getDealerStock(token),
+                tyreStockApi.fetchTyreStocks(token)
+            ]);
 
-            const updatedAdminStock = await tyreStockApi.fetchTyreStocks(token);
+            dealerStockStore.set(updatedDealerStock);
             tyreStocks.set(updatedAdminStock);
 
-            error = null;
         } catch (err) {
-            console.error("Error in handleAddToDealerStock:", err);
-            error = err.message || 'Failed to add stock. Please try again.';
+            handleApiError(err);
         } finally {
             isLoading = false;
         }
     };
 </script>
 
-{#if error}
-    <p class="error">{error}</p>
-{:else}
-    <div class="landing-page">
-        <Navbar {navbarItems} {landingPage} />
+{#if !error.message}
+    <Navbar {navbarItems} {landingPage} />
+{/if}
 
-        <div class="page-content">
+<div class="landing-page">
+    <div class="page-content">
+        {#if error.message}
+            <ErrorTemplate {...error} />
+        {:else}
             <h1>Dealer Dashboard</h1>
 
             {#if isLoading}
-                <p>Loading...</p>
-            {/if}
-            
-            <h2>Available Tyre Stocks from Admin</h2>
-            
-            {#if $tyreStocks.length === 0}
-                <p>No available stock from admin.</p>
+                <div class="loading-indicator">
+                    <p>Loading...</p>
+                </div>
             {:else}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tyre Model</th>
-                            <th>Tyre Size</th>
-                            <th>Available Quantity</th>
-                            <th>Price</th>
-                            <th>Quantity to Add</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {#each $tyreStocks as stock, index}
+                <h2>Available Tyre Stocks from Admin</h2>
+                
+                {#if $tyreStocks.length === 0}
+                    <p class="no-data">No available stock from admin.</p>
+                {:else}
+                    <table class="stock-table">
+                        <thead>
                             <tr>
-                                <td>{stock.tyreModel}</td>
-                                <td>{stock.tyreSize}</td>
-                                <td>{stock.quantity}</td>
-                                <td>${stock.price}</td>
-                                <td>
-                                    <input type="number" min="1" max={stock.quantity} bind:value={quantities[index]} />
-                                </td>
-                                <td>
-                                    <button on:click={() => handleAddToDealerStock(stock, quantities[index])} disabled={isLoading}>
-                                        Add to My Stock
-                                    </button>
-                                </td>
+                                <th>Tyre Model</th>
+                                <th>Tyre Size</th>
+                                <th>Available Quantity</th>
+                                <th>Price</th>
+                                <th>Quantity to Add</th>
+                                <th>Action</th>
                             </tr>
-                        {/each}
-                    </tbody>
-                </table>
-            {/if}
-            
-            <h2>Your Tyre Stocks</h2>
-            
-            {#if !$dealerStockStore || $dealerStockStore.length === 0}
-                <p>No tyre stocks available.</p>
-            {:else}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tyre Model</th>
-                            <th>Tyre Size</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {#each $dealerStockStore as stock}
+                        </thead>
+                        <tbody>
+                            {#each $tyreStocks as stock, index}
+                                <tr>
+                                    <td>{stock.tyreModel}</td>
+                                    <td>{stock.tyreSize}</td>
+                                    <td>{stock.quantity}</td>
+                                    <td>${stock.price}</td>
+                                    <td>
+                                        <input 
+                                            type="number" 
+                                            min="1" 
+                                            max={stock.quantity} 
+                                            bind:value={quantities[index]} 
+                                            disabled={isLoading}
+                                        />
+                                    </td>
+                                    <td>
+                                        <button 
+                                            on:click={() => handleAddToDealerStock(stock, quantities[index])} 
+                                            disabled={isLoading || !quantities[index]}
+                                        >
+                                            {isLoading ? 'Processing...' : 'Add to My Stock'}
+                                        </button>
+                                    </td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </table>
+                {/if}
+                
+                <h2>Your Tyre Stocks</h2>
+                
+                {#if !$dealerStockStore || $dealerStockStore.length === 0}
+                    <p class="no-data">No tyre stocks available.</p>
+                {:else}
+                    <table class="stock-table">
+                        <thead>
                             <tr>
-                                <td>{stock.tyreModel}</td>
-                                <td>{stock.tyreSize}</td>
-                                <td>{stock.quantity}</td>
-                                <td>${stock.price}</td>
+                                <th>Tyre Model</th>
+                                <th>Tyre Size</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
                             </tr>
-                        {/each}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {#each $dealerStockStore as stock}
+                                <tr>
+                                    <td>{stock.tyreModel}</td>
+                                    <td>{stock.tyreSize}</td>
+                                    <td>{stock.quantity}</td>
+                                    <td>${stock.price}</td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </table>
+                {/if}
             {/if}
-        </div>
+        {/if}
     </div>
-{/if}
+</div>
 
 <style lang="scss">
     @use './_landing.scss' as *;

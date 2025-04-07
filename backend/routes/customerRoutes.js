@@ -11,11 +11,11 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/tyres', (req, res, next) => {
+router.get('/tyres', auth(['customer']), (req, res, next) => {
     getAllTyres(req, res, next);
 });
 
-router.get('/tyres/:tyreModel/:tyreSize', (req, res, next) => {
+router.get('/tyres/:tyreModel/:tyreSize', auth(['customer']), (req, res, next) => {
     getTyreDetails(req, res, next);
 });
 

@@ -63,7 +63,7 @@ export const analyticsApi = {
 };
 
 export const tyresApi = {
-  getAllTyres: async () => { return await request('/customer/tyres', 'GET'); },
+  getAllTyres: async (token) => { return await request('/customer/tyres', 'GET', null, token); },
   getTyreDetails: async (tyreModel, tyreSize, token) => { return await request(`/customer/tyres/${encodeURIComponent(tyreModel)}/${tyreSize}`, 'GET', null, token); },
   buyTyre: async (dealerId, tyreId, quantity, token) => { return await request('/customer/buy', 'POST', { dealerId, tyreId, quantity }, token); },
   getPurchaseHistory: async (token) => { return await request('/customer/purchase-history', 'GET', null, token); },
