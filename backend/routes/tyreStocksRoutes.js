@@ -7,7 +7,6 @@ const {
   updateTyreStock
 } = require('../controllers/tyreStocksController');
 const auth = require('../middleware/auth');
-
 const router = express.Router();
 
 router.post('/', auth(['admin']), addTyreStock);

@@ -4,7 +4,7 @@ const Customer = require('../models/Customer');
 const { verifyToken } = require('../utils/jwt');
 const { updateAverageRating, updateAllAverageRatings } = require('../utils/ratingUtils');
 
-exports.getAllTyres = async (req, res) => {
+const getAllTyres = async (req, res) => {
     try {
         const token = req.header('Authorization')?.replace('Bearer ', '');
         if (!token) {
@@ -44,7 +44,7 @@ exports.getAllTyres = async (req, res) => {
     }
 };
 
-exports.getTyreDetails = async (req, res) => {
+const getTyreDetails = async (req, res) => {
     try {
         const token = req.header('Authorization')?.replace('Bearer ', '');
         if (!token) {
@@ -102,7 +102,7 @@ exports.getTyreDetails = async (req, res) => {
     }
 };
 
-exports.buyTyre = async (req, res) => {
+const buyTyre = async (req, res) => {
     try {
         const token = req.header('Authorization')?.replace('Bearer ', '');
         if (!token) {
@@ -175,7 +175,7 @@ exports.buyTyre = async (req, res) => {
     }
 };
 
-exports.getPurchaseHistory = async (req, res) => {
+const getPurchaseHistory = async (req, res) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
     try {
@@ -215,7 +215,7 @@ exports.getPurchaseHistory = async (req, res) => {
     }
 };
 
-exports.updateDealerRating = async (req, res) => {
+const updateDealerRating = async (req, res) => {
     const { orderId, dealerRating } = req.body;
     const userId = req.user._id;
 
@@ -263,7 +263,7 @@ exports.updateDealerRating = async (req, res) => {
     }
 };
 
-exports.updateTyreRating = async (req, res) => {
+const updateTyreRating = async (req, res) => {
     const { orderId, tyreRating } = req.body;
     const userId = req.user._id;
 
@@ -310,3 +310,5 @@ exports.updateTyreRating = async (req, res) => {
         });
     }
 };
+
+module.exports = { getAllTyres, getTyreDetails, buyTyre, getPurchaseHistory, updateDealerRating, updateTyreRating};

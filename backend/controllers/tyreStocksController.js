@@ -3,7 +3,7 @@ const TyreStock = require('../models/TyreStock');
 const Dealer = require('../models/Dealer');
 const { verifyToken } = require('../utils/jwt');
 
-exports.addToDealerStock = async (req, res) => {
+const addToDealerStock = async (req, res) => {
     try {
       const { stockId, quantity } = req.body;
   
@@ -45,7 +45,7 @@ exports.addToDealerStock = async (req, res) => {
     }
 };
 
-exports.buyTyreStock = async (req, res) => {
+const buyTyreStock = async (req, res) => {
     const { id } = req.params;
     const { quantity } = req.body;
     const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -98,36 +98,7 @@ exports.buyTyreStock = async (req, res) => {
     }
 };
 
-exports.getAllTyresWithDealers = async (req, res) => {
-    try {
-        const tyres = await TyreStock.find();
-        const dealers = await Dealer.find({ 'dealerStock.quantity': { $gt: 0 } });
-
-        const dealerMap = {};
-        dealers.forEach(dealer => {
-            dealer.dealerStock.forEach(stock => {
-                if (!dealerMap[stock.tyreModel]) dealerMap[stock.tyreModel] = [];
-                dealerMap[stock.tyreModel].push({
-                    dealerId: dealer._id,
-                    dealerName: dealer.name,
-                    stock: stock.quantity,
-                });
-            });
-        });
-
-        const tyresWithDealers = tyres.map(tyre => ({
-            ...tyre.toObject(),
-            dealers: dealerMap[tyre.tyreModel] || [],
-        })).filter(tyre => tyre.dealers.length > 0);
-
-        res.status(200).json(tyresWithDealers);
-    } catch (error) {
-        console.error('Error fetching tyres with dealers:', error);
-        res.status(500).json({ message: 'Error fetching tyres', error: error.message });
-    }
-};
-
-exports.addTyreStock = async (req, res) => {
+const addTyreStock = async (req, res) => {
     try {
         const { tyreModel, tyreSize, quantity, price } = req.body;
         if (!tyreModel || tyreSize <= 0 || quantity <= 0 || price <= 0) {
@@ -143,7 +114,7 @@ exports.addTyreStock = async (req, res) => {
     }
 };
 
-exports.fetchTyreStocks = async (req, res) => {
+const fetchTyreStocks = async (req, res) => {
     try {
       const tyreStocks = await TyreStock.find();
       res.status(200).json(tyreStocks);
@@ -153,7 +124,7 @@ exports.fetchTyreStocks = async (req, res) => {
     }
 };
 
-exports.deleteTyreStock = async (req, res) => {
+const deleteTyreStock = async (req, res) => {
     try {
         const { id } = req.params;
         const deletedStock = await TyreStock.findByIdAndDelete(id);
@@ -166,7 +137,7 @@ exports.deleteTyreStock = async (req, res) => {
     }
 };
 
-exports.updateTyreStock = async (req, res) => {
+const updateTyreStock = async (req, res) => {
     try {
       const { id } = req.params;
       const { additionalQty, newPrice } = req.body;
@@ -193,3 +164,4 @@ exports.updateTyreStock = async (req, res) => {
     }
   };
   
+  module.exports = { addToDealerStock, addTyreStock, fetchTyreStocks, buyTyreStock, deleteTyreStock, updateTyreStock };

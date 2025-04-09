@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
-const tyreStockRoutes = require('./routes/tyreStockRoutes');
+const tyreStocksRoutes = require('./routes/tyreStocksRoutes');
 const dealerRoutes = require('./routes/dealerRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const customerRoutes = require('./routes/customerRoutes');
@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
 app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes);
-app.use('/api/tyre-stocks', tyreStockRoutes);
+app.use('/api/tyre-stocks', tyreStocksRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/dealer', dealerRoutes);
 app.use('/api/customer', customerRoutes);

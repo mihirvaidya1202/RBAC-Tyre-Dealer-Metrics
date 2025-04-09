@@ -3,7 +3,7 @@ const Dealer = require('../models/Dealer');
 const Customer = require('../models/Customer');
 const Admin = require('../models/Admin');
 
-exports.getAllUsers = async (req, res) => {
+const getAllUsers = async (req, res) => {
   try {
     const users = await User.find({}, '-password');
     res.json(users);
@@ -13,7 +13,7 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-exports.getUserById = async (req, res) => {
+const getUserById = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -29,7 +29,7 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-exports.updateUser = async (req, res) => {
+const updateUser = async (req, res) => {
   const { id } = req.params;
   const { email, username, role } = req.body;
 
@@ -52,7 +52,7 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-exports.deleteUser = async (req, res) => {
+const deleteUser = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -68,7 +68,7 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-exports.getAllDealers = async (req, res) => {
+const getAllDealers = async (req, res) => {
   try {
     const dealers = await Dealer.find({}, '-password');
     res.json(dealers);
@@ -78,7 +78,7 @@ exports.getAllDealers = async (req, res) => {
   }
 };
 
-exports.getAllCustomers = async (req, res) => {
+const getAllCustomers = async (req, res) => {
   try {
     const customers = await Customer.find({}, '-password');
     res.json(customers);
@@ -88,7 +88,7 @@ exports.getAllCustomers = async (req, res) => {
   }
 };
 
-exports.getAllAdmins = async (req, res) => {
+const getAllAdmins = async (req, res) => {
   try {
     const admins = await Admin.find({}, '-password');
     res.json(admins);
@@ -97,3 +97,5 @@ exports.getAllAdmins = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch admins' });
   }
 };
+
+module.exports = { getAllUsers, getUserById, updateUser, deleteUser, getAllDealers, getAllCustomers, getAllAdmins };

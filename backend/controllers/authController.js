@@ -3,48 +3,46 @@ const Customer = require('../models/Customer');
 const Admin = require('../models/Admin');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const { generateToken } = require('../utils/jwt');
 const bcrypt = require('bcryptjs');
 
-exports.register = async (req, res) => {
-  const { username, password, role } = req.body;
-
+const register = async (req, res) => {
   try {
-    const existingDealer = await Dealer.findOne({ username });
-    const existingCustomer = await Customer.findOne({ username });
-    const existingAdmin = await Admin.findOne({ username });
+    const { email, username, password, role } = req.body;
 
-    if (existingDealer || existingCustomer || existingAdmin) {
-      return res.status(400).json({ error: 'Username already exists' });
+    if (!email || !username || !password || !role) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists' });
     }
 
     let newUser;
     switch (role.toLowerCase()) {
-      case "dealer":
-        newUser = new Dealer({ email, username, password, role });
+      case 'dealer':
+        newUser = new Dealer({ email, username, password });
         break;
-      case "customer":
-        newUser = new Customer({ email, username, password, role });
+      case 'customer':
+        newUser = new Customer({ email, username, password });
         break;
-      case "admin":
-        newUser = new Admin({ email, username, password, role });
+      case 'admin':
+        newUser = new Admin({ email, username, password });
         break;
       default:
-        return res.status(400).json({ message: "Invalid role" });
+        return res.status(400).json({ message: 'Invalid role' });
     }
 
     await newUser.save();
+    res.status(201).json({ message: 'User registered successfully', user: newUser });
 
-    const token = generateToken(user);
-
-    res.status(201).json({ message: 'User registered successfully', token });
-  } catch (err) {
-    console.error('Registration Error:', err);
-    res.status(500).json({ error: 'Registration failed' });
+  } catch (error) {
+    console.error('Registration error:', error.stack);
+    res.status(500).json({ message: 'Registration failed', error: error.message });
   }
 };
 
-exports.login = async (req, res) => {
+const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -81,3 +79,5 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: "Login failed", error: error.message });
   }
 };
+
+module.exports = { register, login};

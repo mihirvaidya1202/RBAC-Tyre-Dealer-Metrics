@@ -1,9 +1,7 @@
 const express = require('express');
-const { getAllUsers, getUserById, updateUser, deleteUser, getAllDealers, getAllCustomers, getAllAdmins  } = require('../controllers/userController');
-const { getDealerStock  } = require('../controllers/dealerController');
-
+const { getAllUsers, getUserById, updateUser, deleteUser, getAllDealers, getAllCustomers, getAllAdmins } = require('../controllers/userController');
+const { getDealerStock } = require('../controllers/dealerController');
 const auth = require('../middleware/auth');
-
 const router = express.Router();
 
 router.get('/users', auth(['admin']), getAllUsers);

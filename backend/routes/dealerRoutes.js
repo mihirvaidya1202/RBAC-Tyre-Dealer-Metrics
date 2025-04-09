@@ -2,7 +2,6 @@ const express = require('express');
 const { getDealerStock, getDealerAnalytics } = require('../controllers/dealerController');
 const { addToDealerStock } = require('../controllers/tyreStocksController');
 const auth = require('../middleware/auth');
-
 const router = express.Router();
 
 router.post('/stock/add', auth(['dealer']), addToDealerStock);
