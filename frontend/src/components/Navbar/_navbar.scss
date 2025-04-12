@@ -1,6 +1,7 @@
 .navbar {
     position: sticky;
     top: 0;
+    height: 6.4rem;
     width: 100vw;
     max-width: 100%;
     box-sizing: border-box;
@@ -8,18 +9,13 @@
     justify-content: space-between;
     align-items: center;
     font-size: 1.6rem;
-    padding: 1.6rem 0.8rem;
     background-color: white;
     box-shadow: 0 1.1rem .8rem -1rem #efefef;
     z-index: 1000;
     overflow: visible;
 
-    @media only screen and (min-width: 600px) {
-      padding: 1.6rem 4.8rem;
-    }
-  
     &-brand {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: bold;
     }
   
@@ -53,18 +49,10 @@
   
     &-button {
       background: #f44336;
-      color: white;
-      border: none;
-      padding: 0.8rem 1.6rem;
-      border-radius: 0.8rem;
-      cursor: pointer;
       transition: background-color 0.2s;
-      font-size: 1.4rem;
-      font-weight: 500;
   
       &:hover {
         background-color: #d32f2f;
-        transform: translateY(-0.1rem);
       }
     }
   }

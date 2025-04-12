@@ -43,5 +43,214 @@
                 }
             }
         }
+
+        .dealer-stats-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6.4rem;
+
+            .dealer-info-card {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                max-width: 80rem;
+                align-self: center;
+                align-items: center;
+                padding: 1.6rem;
+                gap: 3.2rem;
+                color: white;
+                background-color: #27509b;
+                border-radius: 0.8rem;
+                box-sizing: border-box;
+                box-shadow: 0 0.2rem 0.8rem rgba(0,0,0,0.1);
+
+                @media only screen and (min-width: 600px) {
+                    padding: 3.2rem;
+                }
+
+                .stats-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    flex-wrap: wrap;
+                    gap: 3.2rem;
+
+                    .total-sold-box {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.8rem;
+                        background-color: #fff;
+                        padding: 1.6rem;
+                        border-radius: 0.8rem;
+                        width: 16rem;
+                        text-align: center;
+                        
+                        h3 {
+                            color: #000;
+                        }
+                        
+                        .total-number {
+                            font-size: 2.5rem;
+                            font-weight: bold;
+                            color: #27509b;
+                            margin: 0;
+                        }
+                    }
+                }
+
+                .rating-wrapper {
+                    display: flex;
+                    flex-wrap: wrap-reverse;
+                    flex-direction: row;
+                    width: 100%;
+                    gap: 1.6rem 3.2rem;
+                    align-items: center;
+                    justify-content: center;
+
+                    @media only screen and (min-width: 600px) {
+                        gap: 3.2rem 6.4rem;
+                    }
+
+                    .rating-circle {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 0.8rem;
+                        
+                        .circle-background {
+                            width: 10rem;
+                            height: 10rem;
+                            border-radius: 50%;
+                            position: relative;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        
+                        .circle-progress {
+                            width: 10rem;
+                            height: 10rem;
+                            border-radius: 50%;
+                            background: conic-gradient(
+                                #fce500 calc(var(--rating) * 72deg), 
+                                #fff 0deg
+                            );
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        
+                        .rating-value {
+                            font-size: 1.8rem;
+                            font-weight: bold;
+                            color: #fff;
+                            background-color: #27509b;
+                            width: 8.5rem;
+                            height: 8.5rem;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                    }
+
+                    .rating-distribution {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 1.6rem;
+                        flex: 1;
+                        min-width: 20rem;
+                        background: #fff;
+                        border-radius: 0.8rem;
+                        padding: 1.6rem;
+                        box-shadow: 0 0.2rem 0.8rem rgba(0,0,0,0.1);
+                        
+                        h3 {
+                            color: #27509b;
+                        }
+                
+                        .total-reviews {
+                            font-size: 1.4rem;
+                            color: #666;
+                        }
+                
+                        .distribution-bars {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 0.8rem;
+                        }
+                
+                        .rating-bar {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.8rem;
+                        }
+                
+                        .star-label {
+                            width: 40px;
+                            font-weight: bold;
+                            color: #27509b;
+                        }
+                
+                        .progress-container {
+                            flex: 1;
+                            height: 0.8rem;
+                            background: #f0f0f0;
+                            border-radius: 10px;
+                            overflow: hidden;
+                        }
+                
+                        .progress-fill {
+                            height: 0.8rem;
+                            background: #27509b;
+                            border-radius: 10px;
+                            transition: width 0.5s ease;
+                        }
+                
+                        .percentage {
+                            width: 50px;
+                            text-align: right;
+                            font-size: 0.9rem;
+                            color: #666;
+                        }
+                    }
+                }
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+        
+            th, td {
+                border: 0.1rem solid #ddd;
+                padding: 0.8rem;
+                text-align: center;
+            }
+        
+            th {
+                background-color: #f4f4f4;
+            }
+        
+            input[type="number"] {
+                width: 6rem;
+                padding: 0.8rem;
+                text-align: center;
+                border: 0.1rem solid #ddd;
+                border-radius: 0.8rem;
+            }
+        
+            .available-stock-table, .purchased-stock-table {
+                display: flex;
+                flex-direction: column;
+                max-width: 80rem;
+                width: 100%;
+                gap: 2.4rem;
+                align-self: center;
+        
+                .stock-table-container {
+                    overflow-x: auto;
+                }
+            }
+        }
     }
 }

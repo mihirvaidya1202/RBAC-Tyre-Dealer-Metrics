@@ -7,6 +7,9 @@
         display: flex;
         flex-direction: column;
         gap: 4.8rem;
+        width: 100%;
+        max-width: 80rem;
+        align-self: center;
 
         &-section {
             display: flex;
@@ -26,11 +29,6 @@
             
             th {
                 background-color: #f2f2f2;
-            }
-    
-            button {
-                padding: 0.8rem 1.6rem;
-                cursor: pointer;
             }
         }
     }

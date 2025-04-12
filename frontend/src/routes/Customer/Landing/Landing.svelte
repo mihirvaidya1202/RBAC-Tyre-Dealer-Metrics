@@ -165,45 +165,49 @@
         {#if error.message}
             <ErrorTemplate {...error} />
         {:else}
-            <h1>Find Your Tyre</h1>
-
+            <h1 class="page-title">Dealer list</h1>
+            
             <div class="search-container">
-                <input
-                    type="text"
-                    bind:value={searchQuery}
-                    placeholder="Search tyres by model or size..."
-                    on:input={updateSearchResults}
-                    on:focus={() => showDropdown = true}
-                    on:keydown={(e) => e.key === 'Enter' && handleSearch()}
-                    disabled={isLoading}
-                />
-                <button 
-                    class="search-btn" 
-                    on:click={handleSearch}
-                    disabled={isLoading}
-                >
-                    {isLoading ? 'Searching...' : 'Search'}
-                </button>
+                <h2>Find Your Tyre</h2>
 
-                {#if showDropdown && filteredTyres.length > 0}
-                    <ul class="dropdown">
-                        {#each filteredTyres as tyre}
-                            <li>
-                                <button
-                                    type="button"
-                                    class="dropdown-item"
-                                    on:click={() => scrollToTyre(tyre)}
-                                    on:keydown={(e) => e.key === "Enter" && scrollToTyre(tyre)}
-                                    disabled={isLoading}
-                                >
-                                    {tyre.tyreModel} ({tyre.tyreSize})
-                                </button>
-                            </li>
-                        {/each}
-                    </ul>
-                {/if}
+                <div class="search-block">
+                    <input
+                        type="text"
+                        bind:value={searchQuery}
+                        placeholder="Search tyres by model or size..."
+                        on:input={updateSearchResults}
+                        on:focus={() => showDropdown = true}
+                        on:keydown={(e) => e.key === 'Enter' && handleSearch()}
+                        disabled={isLoading}
+                    />
+                    <button 
+                        class="search-btn" 
+                        on:click={handleSearch}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? 'Searching...' : 'Search'}
+                    </button>
+    
+                    {#if showDropdown && filteredTyres.length > 0}
+                        <ul class="dropdown">
+                            {#each filteredTyres as tyre}
+                                <li>
+                                    <button
+                                        type="button"
+                                        class="dropdown-item"
+                                        on:click={() => scrollToTyre(tyre)}
+                                        on:keydown={(e) => e.key === "Enter" && scrollToTyre(tyre)}
+                                        disabled={isLoading}
+                                    >
+                                        {tyre.tyreModel} ({tyre.tyreSize})
+                                    </button>
+                                </li>
+                            {/each}
+                        </ul>
+                    {/if}
+                </div>
             </div>
-
+    
             {#if isLoading}
                 <div class="loading-indicator">
                     <p>Loading tyres...</p>
@@ -229,6 +233,7 @@
                     {/each}
                 </div>
             {/if}
+
         {/if}
     </div>
 </div>

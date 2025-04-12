@@ -178,8 +178,6 @@
     <ErrorTemplate {...error} />
 {:else}
     <div class="order-details page-content">
-        <h1>Order Details</h1>
-
         {#if isLoading}
             <div class="loading-indicator">
                 <p>Loading your purchase history...</p>
@@ -187,6 +185,8 @@
         {:else if orders.length === 0}
             <p class="no-data">You do not have any previous orders.</p>
         {:else}
+            <h1 class="page-title">Purchase History</h1>
+
             <ul class="order-list">
                 {#each orders as order}
                     <li class="order-item">

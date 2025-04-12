@@ -32,6 +32,7 @@ form {
         font-size: 1.6rem;
         width: 100%;
         border-collapse: collapse;
+        table-layout: auto;
     
         th, td {
             padding: 0.8rem;
@@ -56,16 +57,10 @@ form {
         th {
             background-color: #f4f4f4;
         }
-    
-        button {
-            padding: 0.8rem 1.6rem;
-            background-color: #27509b;
-            color: white;
-            border: none;
-            cursor: pointer;
-    
-            &:hover {
-                background-color: #0056b3;
+
+        colgroup {
+            col {
+                width: calc(100% / 6);
             }
         }
     }
@@ -75,8 +70,15 @@ form {
     display: flex;
     flex-direction: column;
     gap: 2.4rem;
+    width: 100%;
+    align-self: center;
+}
 
-    h2 {
-        font-size: 1.8rem;
-    }
+.add-tyre-container {
+    max-width: 50rem;
+}
+
+.view-stock-container {
+    max-width: 80rem;
+    overflow-x: auto;
 }

@@ -3,15 +3,9 @@
     flex-direction: column;
     gap: 2.4rem;
 
-    .error {
-        color: red;
-        margin-bottom: 1rem;
-    }
-
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 1rem;
     }
 
     th, td {
@@ -24,29 +18,24 @@
         background-color: #f4f4f4;
     }
 
-    button {
-        background-color: #27509b;
-        color: white;
-        border: none;
-        padding: 0.8rem 1.6rem;
-        cursor: pointer;
-        border-radius: 0.8rem;
-    }
-
-    button:hover {
-        background-color: #0056b3;
-    }
-
-    button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
     input[type="number"] {
         width: 6rem;
         padding: 0.8rem;
         text-align: center;
         border: 0.1rem solid #ddd;
         border-radius: 0.8rem;
+    }
+
+    .available-stock-table, .purchased-stock-table {
+        display: flex;
+        flex-direction: column;
+        max-width: 80rem;
+        width: 100%;
+        gap: 2.4rem;
+        align-self: center;
+
+        .stock-table-container {
+            overflow-x: auto;
+        }
     }
 }

@@ -117,9 +117,14 @@
     {:else if !tyre}
         <p class="no-data">Tyre details not found.</p>
     {:else}
-        <h1>{tyre.tyreModel} - {tyre.tyreSize}</h1>
+        <h1 class="page-title">Dealer list</h1>
 
-        <h2>Available Dealers</h2>
+        <div class="title-container">
+            <h2>{tyre.tyreModel} - {tyre.tyreSize}</h2>
+
+            <h3>Available Dealers</h3>
+        </div>
+
         {#if dealerStockDetails.length > 0}
             <ul class="dealer-list">
                 {#each dealerStockDetails as dealer}

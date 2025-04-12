@@ -45,7 +45,7 @@
 <div class="login-page">
   <Navbar {showLoginButton} />
 
-  <div class="login-container">
+  <div class="page-content">
     <span class="logo-container">
       Your App logo
     </span>

@@ -225,7 +225,7 @@
       {:else if !isAdmin}
           <ErrorTemplate message="Access denied. Admin privileges required." code="FORBIDDEN" />
       {:else}
-          <h1>Admin Dashboard - Tyre Stock Management</h1>
+          <h1 class="page-title">Admin Dashboard - Tyre Stock Management</h1>
 
           {#if isLoading}
               <div class="loading-indicator">

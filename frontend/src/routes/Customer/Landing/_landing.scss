@@ -6,83 +6,99 @@
         font-size: 1.6rem;
         
         .search-container {
-            position: relative;
             display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
             width: 100%;
-            max-width: 60rem;
-            margin: 1.6rem 0;
+            max-width: 80rem;
+            align-self: center;
 
-            input {
-                flex: 1;
-                padding: 1.2rem 1.6rem;
-                border: 0.1rem solid #ddd;
-                border-radius: 0.8rem 0 0 0.8rem;
-                font-size: 1.6rem;
-                outline: none;
-                transition: border-color 0.3s ease;
-
-                &:focus {
-                    border-color: #0056b3;
-                }
-            }
-
-            .search-btn {
-                padding: 0 2.4rem;
-                background-color: #27509b;
-                color: white;
-                border: none;
-                border-radius: 0 0.8rem 0.8rem 0;
-                cursor: pointer;
-                font-size: 1.6rem;
-                transition: background-color 0.3s ease;
-
-                &:hover {
-                    background-color: #0056b3;
-                }
-            }
-
-            .dropdown {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                max-height: 30rem;
-                overflow-y: auto;
-                margin: 0.4rem 0 0 0;
-                padding: 0;
-                border: 0.1rem solid #ddd;
-                border-radius: 0 0 0.8rem 0.8rem;
-                background: white;
-                z-index: 100;
-                list-style: none;
-                box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
-
-                li {
-                    &:not(:last-child) {
-                        border-bottom: 0.1rem solid #eee;
+            .search-block {
+                position: relative;
+                display: flex;
+                width: 100%;
+                max-width: 60rem;
+    
+                input {
+                    flex: 1;
+                    padding: 1.2rem 1.6rem;
+                    border: 0.1rem solid #ddd;
+                    border-radius: 0.8rem 0 0 0.8rem;
+                    font-size: 1.6rem;
+                    outline: none;
+                    transition: border-color 0.3s ease;
+    
+                    &:focus {
+                        border-color: #0056b3;
                     }
                 }
-
-                .dropdown-item {
-                    width: 100%;
-                    padding: 1.2rem 1.6rem;
-                    text-align: left;
+    
+                .search-btn {
+                    padding: 0 2.4rem;
                     border: none;
-                    background: none;
+                    border-radius: 0 0.8rem 0.8rem 0;
                     cursor: pointer;
-                    font-size: 1.4rem;
-                    transition: background-color 0.2s ease;
-
+                    font-size: 1.6rem;
+                    transition: background-color 0.3s ease;
+    
                     &:hover {
-                        background-color: #f5f5f5;
+                        background-color: #0056b3;
+                    }
+                }
+    
+                ul.dropdown {
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    right: 0;
+                    max-height: 30rem;
+                    overflow-y: auto;
+                    margin: 0.4rem 0 0 0;
+                    padding: unset;
+                    gap: unset;
+                    border: 0.1rem solid #ddd;
+                    border-radius: 0 0 0.8rem 0.8rem;
+                    background: white;
+                    z-index: 100;
+                    list-style: none;
+                    box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
+    
+                    li {
+                        padding: unset;
+                        border-radius: unset;
+                        border: unset;
+
+                        &:not(:last-child) {
+                            border-bottom: 0.1rem solid #eee;
+                        }
+                    }
+    
+                    .dropdown-item {
+                        width: 100%;
+                        color: #000;
+                        padding: 1.2rem 1.6rem;
+                        text-align: left;
+                        border: none;
+                        background: none;
+                        cursor: pointer;
+                        font-size: 1.4rem;
+                        transition: background-color 0.2s ease;
+    
+                        &:hover {
+                            background-color: #f5f5f5;
+                        }
                     }
                 }
             }
         }
+
         
         .tyre-list {
             display: flex;
             flex-direction: column;
+            max-width: 80rem;
+            width: 100%;
+            align-self: center;
             gap: 2.4rem;
 
             .tyre-card {
@@ -93,17 +109,20 @@
                 border: 0.1rem solid #ddd;
                 padding: 1.6rem;
                 border-radius: 0.8rem;
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-                &:hover {
-                    transform: translateY(-0.2rem);
-                    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
-                }
 
                 p {
                     margin: unset;
                 }
             }
+        }
+
+        .no-data {
+            width: 100%;
+            max-width: 80rem;
+            align-self: center;
+            color: #ff3e00;
+            font-size: 1.6rem;
+            font-weight: bold;
         }
     }    
 }

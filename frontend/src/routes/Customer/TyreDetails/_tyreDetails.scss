@@ -3,51 +3,32 @@
     flex-direction: column;
     gap: 1.6rem;
     font-size: 1.6rem;
-    
-    ul {
+
+    .title-container {
         display: flex;
         flex-direction: column;
-        gap: 1.6rem;
-        padding: unset;
-        margin: unset;
-        list-style-type: none;
+        width: 100%;
+        max-width: 80rem;
+        align-self: center;
+        gap: 0.8rem;
     }
 
-    li {
-        display: flex;
-        flex-direction: column;
-        gap: 0.8rem;
-        border: 0.1rem solid #ddd;
-        padding: 1.6rem;
-        border-radius: 0.8rem;
+    .dealer-list {
+        width: 100%;
+        max-width: 80rem;
+        align-self: center;
 
-        p {
-            margin: unset;
-        }
+        li {
+            .purchase-container {
+                display: flex;
+                flex-direction: row;
+                gap: 1.6rem;
+                align-items: center;
 
-        .purchase-container {
-            display: flex;
-            flex-direction: row;
-            gap: 1.6rem;
-            align-items: center;
-
-            input {
-                width: 4rem;
-                padding: 0.8rem;
-            }
-        
-            button {
-                background-color: #27509b;
-                color: white;
-                border: none;
-                padding: 0.8rem 1.6rem;
-                border-radius: 0.8rem;
-                cursor: pointer;
-            }
-        
-            button:disabled {
-                background-color: #ccc;
-                cursor: not-allowed;
+                input {
+                    width: 4rem;
+                    padding: 0.8rem;
+                }
             }
         }
     }

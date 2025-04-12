@@ -75,6 +75,7 @@ const getDealerAnalytics = async (req, res) => {
         const tyreSales = {};
         let totalDealerRating = 0;
         let totalDealerRatingsCount = 0;
+        const ratingDistribution = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
 
         customers.forEach(customer => {
             customer.orderHistory.forEach(order => {
@@ -82,12 +83,20 @@ const getDealerAnalytics = async (req, res) => {
                     if (order.orderDealerRating > 0) {
                         totalDealerRating += order.orderDealerRating;
                         totalDealerRatingsCount++;
+                        ratingDistribution[order.orderDealerRating]++;
                     }
 
                     tyreSales[order.tyreId] = (tyreSales[order.tyreId] || 0) + order.quantity;
                 }
             });
         });
+
+        const ratingPercentages = {};
+        for (let i = 1; i <= 5; i++) {
+            ratingPercentages[i] = totalDealerRatingsCount > 0 
+                ? Math.round((ratingDistribution[i] / totalDealerRatingsCount) * 100)
+                : 0;
+        }
 
         const averageDealerRating = totalDealerRatingsCount > 0 
             ? (totalDealerRating / totalDealerRatingsCount).toFixed(2) 
@@ -109,6 +118,8 @@ const getDealerAnalytics = async (req, res) => {
         res.status(200).json({
             name: dealer.username,
             averageRating: averageDealerRating,
+            totalRatings: totalDealerRatingsCount,
+            ratingDistribution: ratingPercentages,
             tyresSold: tyresSold || []
         });
     } catch (err) {

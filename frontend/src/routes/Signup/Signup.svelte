@@ -45,7 +45,7 @@
 <div class="signup-page">
   <Navbar {landingPage} />
 
-  <div class="signup-container">
+  <div class="page-content">
     <span class="logo-container">
       Your App logo
     </span>
