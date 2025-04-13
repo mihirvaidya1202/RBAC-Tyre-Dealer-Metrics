@@ -8,20 +8,27 @@ A Role Based Access Controll Dealer Tyre Metrics Dashboard
 - JWT for authentication and security
 - Purchase history details
 - Tyre and dealer rating possibility
-- Analytics based analysis and reward system
+- Graph / Analytics  based analysis and reward system
 
 ## Installation
 
-Clone the repository
-git clone https://github.com/mihirvaidya1202/RBAC-Tyre-Dealer-Metrics.git
+- Clone the repository
 
-Install frontend and backend Dependencies and run
-Frontend terimanl:
+```sh
+git clone https://github.com/mihirvaidya1202/RBAC-Tyre-Dealer-Metrics.git
+```
+
+- Install frontend and backend Dependencies and run
+```sh
+# Frontend terimanal:
 cd frontend
 npm install
 npm run dev
+```
 
-Backend terminal:
+```sh
+# Backend terminal:
 cd backend
 npm install
 npm run dev
+```
