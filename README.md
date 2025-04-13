@@ -1,6 +1,6 @@
 # RBAC-Tyre-Dealer-Metrics
 
-A Role Based Access Controll Dealer Tyre Metrics Dashboard
+A Role Based Access Control: Dealer Tyre Metrics Dashboard
 
 ## Features
 
@@ -24,9 +24,7 @@ git clone https://github.com/mihirvaidya1202/RBAC-Tyre-Dealer-Metrics.git
 cd frontend
 npm install
 npm run dev
-```
 
-```sh
 # Backend terminal:
 cd backend
 npm install
