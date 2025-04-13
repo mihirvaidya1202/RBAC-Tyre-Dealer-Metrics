@@ -78,7 +78,12 @@ form {
     max-width: 50rem;
 }
 
-.view-stock-container {
+.view-stock-container, .view-stock-container .table-container {
+    width: 100%;
     max-width: 80rem;
+    align-self: center;
+}
+
+.view-stock-container .table-container {
     overflow-x: auto;
 }

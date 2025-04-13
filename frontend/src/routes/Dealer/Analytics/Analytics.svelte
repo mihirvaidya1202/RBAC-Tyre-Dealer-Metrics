@@ -276,25 +276,4 @@
 
 <style lang="scss">
     @use './_analytics.scss' as *;
-
-    .loading-indicator {
-        text-align: center;
-        padding: 2rem;
-        color: #27509b;
-    }
-
-    .no-data {
-        text-align: center;
-        padding: 2rem;
-        color: #666;
-    }
-
-
-
-    @media (max-width: 600px) {
-
-        // .progress-container {
-        //     width: 100%;
-        // }
-    }
 </style>

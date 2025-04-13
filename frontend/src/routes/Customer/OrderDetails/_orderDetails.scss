@@ -6,15 +6,25 @@
         gap: 2.4rem;
 
         li {
+            gap: 1.6rem;
+
             .rating-container {
-                margin-top: 0.8rem;
-            }
-        
-            .stars {
                 display: flex;
-                gap: 1.6rem;
+                flex-direction: column;
+                gap: 0.8rem;
+
+                .stars {
+                    display: flex;
+                    gap: 0.8rem;
+                }
             }
-        
+
+            .rating-display {
+                display: flex;
+                gap: 0.8rem;
+                align-items: center;
+            }
+
             .star {
                 cursor: pointer;
                 font-size: 2.4rem;

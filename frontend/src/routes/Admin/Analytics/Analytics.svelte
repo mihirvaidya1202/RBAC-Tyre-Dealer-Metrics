@@ -12,6 +12,8 @@
     let selectedTyre = null;
     let dealerChart = null;
     let tyreChart = null;
+    let topDealerPurchase = null;
+    let topDealerRating = null;
 
     const navbarItems = [{ label: 'Dashboard', url: '/admin/landing' }];
     const landingPage = '/admin/landing';
@@ -221,7 +223,35 @@
         window.location.href = `mailto:${dealer.email}?subject=${subject}&body=${body}`;
     }
 
+    function sendCongratulatoryMail(dealer) {
+        const subject = encodeURIComponent("Congratulations! You're the Top Dealer 🎉");
+        const body = encodeURIComponent(
+            `Hi ${dealer.dealerName},\n\n` +
+            `Congratulations! You are the top-performing dealer in terms of tyre purchase!\n\n` +
+            `Keep up the great work!\n\n` +
+            `Best Regards,\nAdmin Team`
+        );
+        window.location.href = `mailto:${dealer.email}?subject=${subject}&body=${body}`;
+    }
+
     onMount(fetchAdminAnalytics);
+
+    $: if (!loading && analyticsData.length) {
+    topDealerPurchase = analyticsData
+        .map(dealer => ({
+            ...dealer,
+            totalPurchase: dealer.stocks.reduce((sum, stock) => sum + stock.quantity, 0)
+        }))
+        .sort((a, b) => b.totalPurchase - a.totalPurchase)[0];
+    }
+
+    $: if (!loading && analyticsData.length) {
+    topDealerRating = analyticsData
+        .map(dealer => ({
+            ...dealer,
+        }))
+        .sort((a, b) => b.averageRating - a.averageRating)[0];
+    }
 </script>
 
 {#if error.message}
@@ -244,31 +274,33 @@
                         {#if analyticsData.length === 0}
                             <p class="no-data">No dealers found</p>
                         {:else}
-                            <table class="table-dealer">
-                                <thead>
-                                    <tr>
-                                        <th>Dealer Name</th>
-                                        <th>Email</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {#each analyticsData as dealer}
+                            <div class="table-container">
+                                <table class="table-dealer">
+                                    <thead>
                                         <tr>
-                                            <td>{dealer.dealerName}</td>
-                                            <td>{dealer.email}</td>
-                                            <td>
-                                                <button 
-                                                    on:click={() => analyzeDealer(dealer)}
-                                                    disabled={!dealer.stocks || dealer.stocks.length === 0}
-                                                >
-                                                    {!dealer.stocks || dealer.stocks.length === 0 ? 'No Stock' : 'Analyze'}
-                                                </button>
-                                            </td>
+                                            <th>Dealer Name</th>
+                                            <th>Email</th>
+                                            <th>Action</th>
                                         </tr>
-                                    {/each}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {#each analyticsData as dealer}
+                                            <tr>
+                                                <td>{dealer.dealerName}</td>
+                                                <td>{dealer.email}</td>
+                                                <td>
+                                                    <button 
+                                                        on:click={() => analyzeDealer(dealer)}
+                                                        disabled={!dealer.stocks || dealer.stocks.length === 0}
+                                                    >
+                                                        {!dealer.stocks || dealer.stocks.length === 0 ? 'No Stock' : 'Analyze'}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {/each}
+                                    </tbody>
+                                </table>
+                            </div>
                         {/if}
                     </div>
 
@@ -290,26 +322,28 @@
                         {#if analyticsData.flatMap(d => d.stocks).length === 0}
                             <p class="no-data">No tyre data available</p>
                         {:else}
-                            <table class="table-tyres">
-                                <thead>
-                                    <tr>
-                                        <th>Tyre Model</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {#each [...new Set(analyticsData.flatMap(dealer => dealer.stocks.map(stock => stock.tyreModel)))] as tyreModel}
+                            <div class="table-container">
+                                <table class="table-tyres">
+                                    <thead>
                                         <tr>
-                                            <td>{tyreModel}</td>
-                                            <td>
-                                                <button on:click={() => analyzeTyre(tyreModel)}>
-                                                    Analyze
-                                                </button>
-                                            </td>
+                                            <th>Tyre Model</th>
+                                            <th>Action</th>
                                         </tr>
-                                    {/each}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {#each [...new Set(analyticsData.flatMap(dealer => dealer.stocks.map(stock => stock.tyreModel)))] as tyreModel}
+                                            <tr>
+                                                <td>{tyreModel}</td>
+                                                <td>
+                                                    <button on:click={() => analyzeTyre(tyreModel)}>
+                                                        Analyze
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {/each}
+                                    </tbody>
+                                </table>
+                            </div>
                         {/if}
                     </div>
 
@@ -322,39 +356,101 @@
                         </div>
                     {/if}
 
+                    {#if topDealerPurchase}
+                        <div class="tables-container-section">
+                            <h2>🏆 Top Dealer: Purchase</h2>
+
+                            <div class="table-container">
+                                <table class="table-tyres">
+                                    <thead>
+                                        <tr>
+                                            <th>Dealer</th>
+                                            <th>Tyre Purchased</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{topDealerPurchase.dealerName}</td>
+                                            <td>{topDealerPurchase.totalPurchase}</td>
+                                            <td>
+                                                <button on:click={() => sendCongratulatoryMail(topDealerPurchase)}>
+                                                    Send Congratulations
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {/if}
+
+                    {#if topDealerRating}
+                        <div class="tables-container-section">
+                            <h2>🏆 Top Dealer: Rating</h2>
+
+                            <div class="table-container">
+                                <table class="table-tyres">
+                                    <thead>
+                                        <tr>
+                                            <th>Dealer</th>
+                                            <th>Dealer Rating</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{topDealerRating.dealerName}</td>
+                                            <td>{topDealerRating.averageRating}</td>
+                                            <td>
+                                                <button on:click={() => sendCongratulatoryMail(topDealerPurchase)}>
+                                                    Send Congratulations
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {/if}
+
+
                     {#if analyticsData.some(dealer => dealer.stocks.some(tyre => tyre.quantity < 5))}
                         <div class="tables-container-section stock-alerts">
                             <h2>⚠️ Low Stock Alerts</h2>
-                            <table class="table-stock">
-                                <thead>
-                                    <tr>
-                                        <th>Dealer</th>
-                                        <th>Email</th>
-                                        <th>Tyre Model</th>
-                                        <th>Stock</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {#each analyticsData as dealer}
-                                        {#each dealer.stocks as tyre}
-                                            {#if tyre.quantity < 5}
-                                                <tr class:critical={tyre.quantity < 3}>
-                                                    <td>{dealer.dealerName}</td>
-                                                    <td>{dealer.email}</td>
-                                                    <td>{tyre.tyreModel}</td>
-                                                    <td>{tyre.quantity}</td>
-                                                    <td>
-                                                        <button on:click={() => sendMail(dealer, tyre)}>
-                                                            Notify Dealer
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            {/if}
+
+                            <div class="table-container">
+                                <table class="table-stock">
+                                    <thead>
+                                        <tr>
+                                            <th>Dealer</th>
+                                            <th>Email</th>
+                                            <th>Tyre Model</th>
+                                            <th>Stock</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {#each analyticsData as dealer}
+                                            {#each dealer.stocks as tyre}
+                                                {#if tyre.quantity < 5}
+                                                    <tr class:critical={tyre.quantity < 3}>
+                                                        <td>{dealer.dealerName}</td>
+                                                        <td>{dealer.email}</td>
+                                                        <td>{tyre.tyreModel}</td>
+                                                        <td>{tyre.quantity}</td>
+                                                        <td>
+                                                            <button on:click={() => sendMail(dealer, tyre)}>
+                                                                Notify Dealer
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                {/if}
+                                            {/each}
                                         {/each}
-                                    {/each}
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     {:else}
                         <div class="tables-container-section">

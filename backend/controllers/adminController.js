@@ -1,6 +1,6 @@
 const User = require('../models/User');
 
-const getAdminAnalytics = async (req, res) => {
+const fetchAdminAnalytics = async (req, res) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
     if (!token) {
@@ -29,7 +29,8 @@ const getAdminAnalytics = async (req, res) => {
                 tyreSize: stock.tyreStockId?.tyreSize || 'N/A',
                 quantity: stock.quantity,
                 price: stock.tyreStockId?.price || 0
-            })).filter(stock => stock.quantity > 0)
+            })).filter(stock => stock.quantity > 0),
+            averageRating: dealer.averageRating
         }));
 
         res.status(200).json(analyticsData);
@@ -43,4 +44,4 @@ const getAdminAnalytics = async (req, res) => {
     }
 };
 
-module.exports = { getAdminAnalytics };
+module.exports = { fetchAdminAnalytics };

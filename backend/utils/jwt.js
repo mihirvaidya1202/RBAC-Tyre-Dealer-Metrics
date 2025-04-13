@@ -13,7 +13,7 @@ const verifyToken = (token) => {
   try {
     return jwt.verify(token, secret);
   } catch (error) {
-    console.error('Token verification failed:', error.message);
+    console.error('Token verification failed from jwt:', error.message);
     throw new Error('Invalid or expired token');
   }
 };

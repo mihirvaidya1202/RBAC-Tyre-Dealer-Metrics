@@ -96,18 +96,14 @@
 
     function updateSearchResults(event) {
         searchQuery = event.target.value;
-        const query = searchQuery.toLowerCase();
-
-        const sizeMatch = query.match(/\((\d+)\)/);
-        const searchSize = sizeMatch ? sizeMatch[1] : null;
-        const searchModel = query.replace(/\(\d+\)/g, '').trim();
+        const query = searchQuery.toLowerCase().trim();
 
         filteredTyres = tyres.filter(tyre => {
-            const modelMatch = tyre.tyreModel.toLowerCase().includes(searchModel);
-            const sizeMatch = searchSize 
-                ? tyre.tyreSize.toLowerCase().includes(searchSize)
-                : true;
-            return modelMatch && sizeMatch;
+            const searchWords = query.split(/\s+/);
+            const modelWords = tyre.tyreModel.toLowerCase().split(/\s+/);
+            return searchWords.every(word => 
+                modelWords.some(modelWord => modelWord.includes(word))
+            );
         });
 
         showDropdown = filteredTyres.length > 0;

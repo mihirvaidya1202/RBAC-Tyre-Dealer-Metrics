@@ -252,5 +252,17 @@
                 }
             }
         }
+
+        .loading-indicator {
+            text-align: center;
+            padding: 2rem;
+            color: #27509b;
+        }
+    
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
     }
 }

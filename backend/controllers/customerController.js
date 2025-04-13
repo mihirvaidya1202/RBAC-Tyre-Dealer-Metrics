@@ -113,7 +113,6 @@ const buyTyre = async (req, res) => {
         }
 
         const { dealerId, tyreId, quantity } = req.body;
-
         const userId = req.user._id;
 
         const dealer = await Dealer.findById(dealerId);
@@ -143,6 +142,9 @@ const buyTyre = async (req, res) => {
         }
 
         stockItem.quantity -= quantity;
+
+        dealer.totalTyresPurchased = (dealer.totalTyresPurchased || 0) + quantity;
+
         await dealer.save();
 
         const customer = await Customer.findById(userId);
