@@ -272,7 +272,7 @@
                     <div class="tables-container-section">
                         <h2>Dealers</h2>
                         {#if analyticsData.length === 0}
-                            <p class="no-data">No dealers found</p>
+                            <p class="error">No dealers found</p>
                         {:else}
                             <div class="table-container">
                                 <table class="table-dealer">
@@ -312,7 +312,7 @@
                                     <div class="dealerChartContainer"></div>
                                 </div>
                             {:else}
-                                <p class="no-data">No stock data available for this dealer</p>
+                                <p class="error">No stock data available for this dealer</p>
                             {/if}
                         </div>
                     {/if}
@@ -320,7 +320,7 @@
                     <div class="tables-container-section">
                         <h2>Tyres</h2>
                         {#if analyticsData.flatMap(d => d.stocks).length === 0}
-                            <p class="no-data">No tyre data available</p>
+                            <p class="error">No tyre data available</p>
                         {:else}
                             <div class="table-container">
                                 <table class="table-tyres">
@@ -374,7 +374,7 @@
                                             <td>{topDealerPurchase.dealerName}</td>
                                             <td>{topDealerPurchase.totalPurchase}</td>
                                             <td>
-                                                <button on:click={() => sendCongratulatoryMail(topDealerPurchase)}>
+                                                <button disabled={topDealerPurchase.totalPurchase == 0} on:click={() => sendCongratulatoryMail(topDealerPurchase)}>
                                                     Send Congratulations
                                                 </button>
                                             </td>
@@ -403,7 +403,7 @@
                                             <td>{topDealerRating.dealerName}</td>
                                             <td>{topDealerRating.averageRating}</td>
                                             <td>
-                                                <button on:click={() => sendCongratulatoryMail(topDealerPurchase)}>
+                                                <button disabled={topDealerRating.averageRating == 0} on:click={() => sendCongratulatoryMail(topDealerPurchase)}>
                                                     Send Congratulations
                                                 </button>
                                             </td>

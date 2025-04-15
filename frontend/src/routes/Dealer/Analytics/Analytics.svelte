@@ -229,7 +229,7 @@
                         <h2>Your Tyre Stocks</h2>
                     
                         {#if !$dealerStockStore || $dealerStockStore.length === 0}
-                            <p class="no-data">No tyre stocks available.</p>
+                            <p class="error">No tyre stocks available.</p>
                         {:else}
                             <div class="stock-table-container">
                                 <table class="stock-table">
@@ -263,12 +263,12 @@
                                 <canvas id="tyreSalesChart"></canvas>
                             </div>
                         {:else}
-                            <p class="no-data">No tyre sales data available.</p>
+                            <p class="error">No tyre sales data available.</p>
                         {/if}
                     </div>
                 </div>
             {:else}
-                <p class="no-data">No dealer data available.</p>
+                <p class="error">No dealer data available.</p>
             {/if}
         </div>
     {/if}

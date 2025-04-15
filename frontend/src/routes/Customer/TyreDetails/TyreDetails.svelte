@@ -115,7 +115,7 @@
             <p>Loading tyre details...</p>
         </div>
     {:else if !tyre}
-        <p class="no-data">Tyre details not found.</p>
+        <p class="error">Tyre details not found.</p>
     {:else}
         <h1 class="page-title">Dealer list</h1>
 
@@ -157,7 +157,7 @@
                 {/each}
             </ul>
         {:else}
-            <p class="no-data">No dealers have this tyre in stock.</p>
+            <p class="error">No dealers have this tyre in stock.</p>
         {/if}
     {/if}
 </div>

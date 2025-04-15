@@ -289,7 +289,7 @@
                     <h2>Current Tyre Stocks</h2>
 
                     {#if $tyreStocks.length === 0}
-                        <p class="no-data">No tyre stocks available.</p>
+                        <p class="error">No tyre stocks available.</p>
                     {:else}
                         <div class="table-container">
                             <table class="stock-table">

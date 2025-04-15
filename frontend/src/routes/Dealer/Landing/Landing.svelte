@@ -132,7 +132,7 @@
                     <h2>Available Tyre Stocks from Admin</h2>
                     
                     {#if $tyreStocks.length === 0}
-                        <p class="no-data">No available stock from admin.</p>
+                        <p class="error">No available stock from admin.</p>
                     {:else}
                         <div class="stock-table-container">
                             <table class="stock-table">
@@ -182,7 +182,7 @@
                     <h2>Your Tyre Stocks</h2>
                 
                     {#if !$dealerStockStore || $dealerStockStore.length === 0}
-                        <p class="no-data">No tyre stocks available.</p>
+                        <p class="error">No tyre stocks available.</p>
                     {:else}
                         <div class="stock-table-container">
                             <table class="stock-table">

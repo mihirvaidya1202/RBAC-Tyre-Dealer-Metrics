@@ -209,7 +209,7 @@
                     <p>Loading tyres...</p>
                 </div>
             {:else if filteredTyres.length === 0}
-                <p class="no-data">No matching tyres found.</p>
+                <p class="error">No matching tyres found.</p>
             {:else}
                 <div class="tyre-list">
                     {#each filteredTyres as filteredTyre (filteredTyre.tyreModel + '-' + filteredTyre.tyreSize)}

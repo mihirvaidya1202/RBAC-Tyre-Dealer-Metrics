@@ -65,10 +65,7 @@
                     hoverDealerRating: null
                 }));
             } else {
-                error = {
-                    message: "You do not have any previous orders.",
-                    code: 'NO_ORDERS'
-                };
+                console.error("You do not have any previous orders.")
             }
         } catch (err) {
             handleApiError(err);
@@ -183,7 +180,7 @@
                 <p>Loading your purchase history...</p>
             </div>
         {:else if orders.length === 0}
-            <p class="no-data">You do not have any previous orders.</p>
+            <p class="error">You do not have any previous orders.</p>
         {:else}
             <h1 class="page-title">Purchase History</h1>
 
