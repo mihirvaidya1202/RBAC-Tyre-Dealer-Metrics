@@ -24,8 +24,11 @@ git clone https://github.com/mihirvaidya1202/RBAC-Tyre-Dealer-Metrics.git
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-- Install frontend and backend Dependencies and run
+- Install dependencies and run
 ```sh
+# In the project root
+npm install
+
 # Frontend terimanal:
 cd frontend
 npm install
