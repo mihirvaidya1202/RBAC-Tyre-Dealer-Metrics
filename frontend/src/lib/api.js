@@ -41,8 +41,6 @@ const request = async (url, method, body = null, token = null) => {
 export const authApi = {
   login: async (credentials) => request('/auth/login', 'POST', credentials),
   register: async (userData) => request('/auth/register', 'POST', userData),
-  refreshToken: async (refreshToken) => request('/auth/refresh-token', 'POST', { refreshToken }),
-  logout: async (token) => request('/auth/logout', 'POST', null, token),
 };
 
 export const tyreStockApi = {

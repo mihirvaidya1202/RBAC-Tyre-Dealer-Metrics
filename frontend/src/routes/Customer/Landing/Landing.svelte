@@ -161,7 +161,7 @@
         {#if error.message}
             <ErrorTemplate {...error} />
         {:else}
-            <h1 class="page-title">Dealer list</h1>
+            <h1 class="page-title">Customer Dashboard</h1>
             
             <div class="search-container">
                 <h2>Find Your Tyre</h2>

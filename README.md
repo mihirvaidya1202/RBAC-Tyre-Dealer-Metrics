@@ -18,6 +18,12 @@ A Role Based Access Control: Dealer Tyre Metrics Dashboard
 git clone https://github.com/mihirvaidya1202/RBAC-Tyre-Dealer-Metrics.git
 ```
 
+- Create .env file according in frontend and backend folder
+```sh
+# Generate JWT Token
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
 - Install frontend and backend Dependencies and run
 ```sh
 # Frontend terimanal:
