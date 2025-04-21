@@ -32,6 +32,7 @@ npm install
 # Frontend terimanal:
 cd frontend
 npm install
+npm run build
 npm run dev
 
 # Backend terminal:
