@@ -223,11 +223,11 @@
         window.location.href = `mailto:${dealer.email}?subject=${subject}&body=${body}`;
     }
 
-    function sendCongratulatoryMail(dealer) {
+    function sendCongratulatoryMail(dealer, reason) {
         const subject = encodeURIComponent("Congratulations! You're the Top Dealer 🎉");
         const body = encodeURIComponent(
             `Hi ${dealer.dealerName},\n\n` +
-            `Congratulations! You are the top-performing dealer in terms of tyre purchase!\n\n` +
+            `Congratulations! You are the top-performing dealer in terms of ${reason}!\n\n` +
             `Keep up the great work!\n\n` +
             `Best Regards,\nAdmin Team`
         );
@@ -374,7 +374,7 @@
                                             <td>{topDealerPurchase.dealerName}</td>
                                             <td>{topDealerPurchase.totalPurchase}</td>
                                             <td>
-                                                <button disabled={topDealerPurchase.totalPurchase == 0} on:click={() => sendCongratulatoryMail(topDealerPurchase)}>
+                                                <button disabled={topDealerPurchase.totalPurchase == 0} on:click={() => sendCongratulatoryMail(topDealerPurchase, "purchase")}>
                                                     Send Congratulations
                                                 </button>
                                             </td>
@@ -403,7 +403,7 @@
                                             <td>{topDealerRating.dealerName}</td>
                                             <td>{topDealerRating.averageRating}</td>
                                             <td>
-                                                <button disabled={topDealerRating.averageRating == 0} on:click={() => sendCongratulatoryMail(topDealerPurchase)}>
+                                                <button disabled={topDealerRating.averageRating == 0} on:click={() => sendCongratulatoryMail(topDealerRating, "rating")}>
                                                     Send Congratulations
                                                 </button>
                                             </td>
